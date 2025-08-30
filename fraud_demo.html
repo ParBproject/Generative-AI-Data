@@ -26,14 +26,14 @@
   </div>
   <div id="chart"></div>
   <script>
-    function generateData(fraudPct, drift) {
+    function generateData(fraudPct, driftLevel) {
       const total = 1000;
       const fraudCount = Math.round(total * fraudPct / 100);
       const legitCount = total - fraudCount;
       const legitX = [], legitY = [], fraudX = [], fraudY = [];
       for (let i = 0; i < legitCount; i++) {
-        legitX.push(Math.random() * 50 + drift);
-        legitY.push(Math.random() * 50 + drift);
+        legitX.push(Math.random() * 50 + driftLevel);
+        legitY.push(Math.random() * 50 + driftLevel);
       }
       for (let i = 0; i < fraudCount; i++) {
         fraudX.push(70 + Math.random() * 30);
@@ -47,24 +47,24 @@
         margin:{t:30},
       }, {responsive:true});
     }
-    const rate = document.getElementById('rate');
-    const drift = document.getElementById('drift');
+    const rateSlider = document.getElementById('rate');
+    const driftSlider = document.getElementById('drift');
     const lblRate = document.getElementById('lblRate');
     const lblDrift = document.getElementById('lblDrift');
-    const balanced = document.getElementById('balanced');
+    const balanceToggle = document.getElementById('balanced');
 
     function update() {
-      const pct = balanced.checked ? 50 : parseInt(rate.value);
-      const driftVal = parseInt(drift.value);
+      const pct = balanceToggle.checked ? 50 : parseInt(rateSlider.value);
+      const driftVal = parseInt(driftSlider.value);
       lblRate.textContent = pct;
       lblDrift.textContent = driftVal;
-      rate.disabled = balanced.checked;
+      rateSlider.disabled = balanceToggle.checked;
       generateData(pct, driftVal);
     }
 
-    rate.addEventListener('input', update);
-    drift.addEventListener('input', update);
-    balanced.addEventListener('change', update);
+    rateSlider.addEventListener('input', update);
+    driftSlider.addEventListener('input', update);
+    balanceToggle.addEventListener('change', update);
     update();
   </script>
 </body>
