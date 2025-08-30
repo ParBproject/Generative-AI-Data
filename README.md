@@ -1,2 +1,439 @@
 # Generative-AI-Data
 Using generative AI Data to solve problems. 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generative AI Data Analyst – Portfolio</title>
+  <meta name="description" content="Portfolio of a Generative AI Data Analyst: projects, interactive visualizations, dashboards, and contact." />
+  <meta name="author" content="Your Name" />
+  <meta property="og:title" content="Generative AI Data Analyst – Portfolio" />
+  <meta property="og:description" content="Projects, dashboards, and AI-powered data storytelling." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://dummyimage.com/1200x630/0b1020/e0e7ff&text=AI+Data+Analyst+Portfolio" />
+  <meta name="theme-color" content="#0b1020" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <!-- Plotly for interactive charts -->
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121735;
+      --panel-2: #0e1430;
+      --text: #e6e9f5;
+      --muted: #a7b0d1;
+      --accent: #7c5cff;
+      --accent-2: #36e1dc;
+      --ring: rgba(124,92,255,.35);
+      --success: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --shadow: 0 10px 30px rgba(18, 23, 53, .6);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 800px at 20% -10%, rgba(124,92,255,.12), transparent 60%),
+                  radial-gradient(1000px 700px at 120% 10%, rgba(54,225,220,.10), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--accent-2); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Top nav */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(180deg, rgba(11,16,32,.8), rgba(11,16,32,.4));
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.5px; }
+    .logo {
+      width: 36px; height: 36px; border-radius: 12px; display:grid; place-items:center;
+      background: conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent));
+      color: #0b1020; font-weight:800;
+      box-shadow: 0 6px 16px rgba(124,92,255,.35);
+    }
+    .nav a.link { color: var(--muted); margin-left: 18px; font-weight: 500; }
+    .nav a.link:hover { color: var(--text); }
+
+    /* Hero */
+    .hero { max-width: 1100px; margin: 40px auto 10px; padding: 0 20px; display:grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items:center; }
+    .title { font-family: 'Montserrat', sans-serif; font-size: clamp(28px, 4vw, 44px); line-height: 1.1; margin: 0 0 14px; }
+    .subtitle { color: var(--muted); font-size: clamp(14px, 2vw, 18px); margin-bottom: 22px; }
+    .cta { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn {
+      display:inline-flex; align-items:center; gap:10px; padding: 10px 16px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      color: var(--text); font-weight: 600; box-shadow: var(--shadow);
+    }
+    .btn:hover { border-color: rgba(124,92,255,.6); box-shadow: 0 10px 24px rgba(124,92,255,.25); }
+    .btn.primary { background: linear-gradient(180deg, var(--accent), #5b35ff); color: white; border: none; }
+
+    .hero-card {
+      background: linear-gradient(180deg, rgba(124,92,255,.18), rgba(54,225,220,.08));
+      border: 1px solid rgba(255,255,255,.08); padding: 18px; border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    /* Sections */
+    section { max-width: 1100px; margin: 28px auto; padding: 0 20px; }
+    .section-title { font-family: 'Montserrat', sans-serif; font-size: 24px; margin: 12px 0 8px; }
+    .muted { color: var(--muted); }
+
+    /* Skills */
+    .skills { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .chip {
+      display:flex; align-items:center; gap:10px; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    }
+    .chip .dot { width:10px; height:10px; border-radius:50%; background: var(--accent-2); box-shadow: 0 0 12px rgba(54,225,220,.8); }
+
+    /* Projects */
+    .projects-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+      display:flex; flex-direction:column; min-height: 260px;
+    }
+    .thumb { height:140px; background: radial-gradient(300px 220px at 20% -10%, rgba(124,92,255,.35), transparent 60%), radial-gradient(300px 220px at 120% 120%, rgba(54,225,220,.25), transparent 60%), #0d1330; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .card-content { padding: 14px; display:flex; flex:1; flex-direction:column; }
+    .tags { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 12px; }
+    .tag { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); color: var(--muted); }
+    .card a { align-self:flex-start; margin-top: auto; }
+
+    /* Viz */
+    .viz-grid { display:grid; grid-template-columns: 1fr; gap: 14px; }
+    .panel { background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px; }
+    .panel h3 { margin: 8px 8px 12px; font-size: 18px; }
+
+    .kpis { display:grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; }
+    .kpi { padding: 12px; border-radius: 12px; background: #0e1430; border: 1px solid rgba(255,255,255,.06); }
+    .kpi .label { color: var(--muted); font-size: 12px; }
+    .kpi .value { font-family: 'Montserrat', sans-serif; font-size: 20px; margin-top: 6px; }
+
+    /* Footer */
+    footer { margin: 34px 0 60px; text-align:center; color: var(--muted); }
+
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .kpis { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <header class="nav" aria-label="Top Navigation">
+    <div class="nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">AI</div>
+        <span>Generative AI Data Analyst</span>
+      </div>
+      <nav>
+        <a class="link" href="#projects">Projects</a>
+        <a class="link" href="#visualizations">Visualizations</a>
+        <a class="link" href="#about">About</a>
+        <a class="link" href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div>
+        <h1 class="title">Turning data into interactive stories — with Generative AI</h1>
+        <p class="subtitle">I build AI-assisted analytics, from data pipelines to dashboards to LLM-driven insights. Explore my projects and visualizations below.</p>
+        <div class="cta">
+          <a class="btn primary" href="#projects">View Projects</a>
+          <a class="btn" href="#visualizations">See Visualizations</a>
+          <a class="btn" href="https://github.com/yourusername" target="_blank" rel="noopener">GitHub ↗</a>
+        </div>
+      </div>
+      <div class="hero-card" aria-label="At-a-glance metrics">
+        <div class="kpis" id="kpis"></div>
+        <div class="muted" style="margin-top:10px">Sample KPIs auto-generated with synthetic data for demo purposes.</div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section aria-labelledby="skills-title">
+      <h2 class="section-title" id="skills-title">Skills & Tools</h2>
+      <p class="muted">Python • Pandas • SQL • Plotly • Power BI • Tableau • Streamlit • scikit-learn • LangChain • Prompt Engineering • Hugging Face • Git/GitHub</p>
+      <div class="skills" role="list">
+        <div class="chip" role="listitem"><span class="dot"></span> Python / Pandas</div>
+        <div class="chip" role="listitem"><span class="dot"></span> SQL / dbt</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Plotly / D3</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Tableau / Power BI</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Streamlit</div>
+        <div class="chip" role="listitem"><span class="dot"></span> scikit-learn</div>
+        <div class="chip" role="listitem"><span class="dot"></span> LLMs / LangChain</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Git / CI-CD</div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" aria-labelledby="projects-title">
+      <h2 class="section-title" id="projects-title">Projects</h2>
+      <div class="muted">Hand-picked case studies with visuals, methods, and repos.</div>
+      <div class="projects-grid" id="projectsGrid"></div>
+    </section>
+
+    <!-- Visualizations -->
+    <section id="visualizations" aria-labelledby="viz-title">
+      <h2 class="section-title" id="viz-title">Interactive Visualizations</h2>
+      <div class="viz-grid">
+        <div class="panel">
+          <h3>Time Series with AI Forecast</h3>
+          <div id="chartTimeseries" style="height:340px;"></div>
+        </div>
+        <div class="panel">
+          <h3>Class Distribution vs Synthetic Data</h3>
+          <div id="chartHistogram" style="height:320px;"></div>
+        </div>
+        <div class="panel">
+          <h3>Confusion Matrix (Model Evaluation)</h3>
+          <div id="chartHeatmap" style="height:320px;"></div>
+        </div>
+        <div class="panel">
+          <h3>Feature Relationship (Interactive)</h3>
+          <div id="chartScatter" style="height:340px;"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" aria-labelledby="about-title">
+      <h2 class="section-title" id="about-title">About Me</h2>
+      <p class="muted">I’m a Generative AI–focused Data Analyst who loves bridging analytical rigor with compelling visuals. I build reproducible pipelines, design dashboards that invite exploration, and use LLMs to generate insights, summaries, and synthetic data for experimentation.</p>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" aria-labelledby="contact-title">
+      <h2 class="section-title" id="contact-title">Contact</h2>
+      <p class="muted">Want to collaborate or have a role in mind? Reach me via the form below or connect on <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>.</p>
+      <form class="panel" style="max-width:680px" action="https://formspree.io/f/your-form-id" method="POST">
+        <label>
+          <span>Name</span>
+          <input name="name" required style="width:100%; margin-top:6px; margin-bottom:12px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#0e1430; color:var(--text)"/>
+        </label>
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" required style="width:100%; margin-top:6px; margin-bottom:12px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#0e1430; color:var(--text)"/>
+        </label>
+        <label>
+          <span>Message</span>
+          <textarea name="message" rows="5" required style="width:100%; margin-top:6px; margin-bottom:12px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#0e1430; color:var(--text)"></textarea>
+        </label>
+        <button class="btn primary" type="submit">Send message</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div>© <span id="year"></span> • Your Name • <a href="/resume.pdf">Resume</a></div>
+  </footer>
+
+  <script>
+    // ======= Demo Data + Utilities =======
+    const rand = (min, max) => Math.random() * (max - min) + min;
+    const normal = (mean, std) => mean + std * Math.sqrt(-2 * Math.log(Math.random())) * Math.cos(2 * Math.PI * Math.random());
+
+    // Fake KPI generator
+    const kpiData = [
+      { label: 'Dashboards Shipped', value: () => Math.floor(rand(8, 20)) },
+      { label: 'Models Evaluated', value: () => Math.floor(rand(4, 12)) },
+      { label: 'Avg Uplift', value: () => (rand(4, 18)).toFixed(1) + '%' },
+      { label: 'Stakeholder NPS', value: () => (rand(8.4, 9.9)).toFixed(1) + '/10' },
+    ];
+
+    // Projects (replace with your real links and descriptions)
+    const projects = [
+      {
+        title: 'AI-Driven Review Sentiment (Retail)',
+        blurb: 'LLM-assisted sentiment + topic modeling; Plotly dashboard and GPT summaries.',
+        tags: ['Python', 'LLM', 'Plotly', 'NLP'],
+        repo: 'https://github.com/yourusername/retail-sentiment-llm',
+        live: '#visualizations'
+      },
+      {
+        title: 'Synthetic Data for Fraud Detection',
+        blurb: 'Generated class-balanced samples with controllable drift to stress-test models.',
+        tags: ['Python', 'GAN', 'sklearn'],
+        repo: 'https://github.com/yourusername/fraud-synth',
+        live: '#visualizations'
+      },
+      {
+        title: 'Automated Data Storytelling',
+        blurb: 'Pipelines that produce GPT summaries next to interactive charts.',
+        tags: ['LangChain', 'Streamlit', 'Plotly'],
+        repo: 'https://github.com/yourusername/data-storytelling',
+        live: '#visualizations'
+      },
+      {
+        title: 'Churn Prediction Dashboard',
+        blurb: 'Feature insights + SHAP-style visuals and what-if analysis.',
+        tags: ['Power BI', 'Python', 'XGBoost'],
+        repo: 'https://github.com/yourusername/churn-dashboard',
+        live: '#visualizations'
+      }
+    ];
+
+    // Render KPIs
+    const kpisEl = document.getElementById('kpis');
+    kpiData.forEach(k => {
+      const el = document.createElement('div');
+      el.className = 'kpi';
+      el.innerHTML = `<div class="label">${k.label}</div><div class="value">${k.value()}</div>`;
+      kpisEl.appendChild(el);
+    });
+
+    // Render Projects
+    const grid = document.getElementById('projectsGrid');
+    projects.forEach(p => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="thumb" role="img" aria-label="Project thumbnail"></div>
+        <div class="card-content">
+          <h3 style="margin:0 0 6px; font-size:18px;">${p.title}</h3>
+          <p class="muted" style="margin:0 0 10px;">${p.blurb}</p>
+          <div class="tags">${p.tags.map(t => `<span class='tag'>${t}</span>`).join('')}</div>
+          <div style="display:flex; gap:10px;">
+            <a class="btn" href="${p.repo}" target="_blank" rel="noopener">GitHub Repo ↗</a>
+            <a class="btn" href="${p.live}">Live Demo</a>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+
+    // ======= Charts =======
+    function renderTimeSeries() {
+      // 24 months baseline
+      const months = Array.from({ length: 24 }, (_, i) => {
+        const d = new Date();
+        d.setMonth(d.getMonth() - (23 - i));
+        return d.toISOString().slice(0,7);
+      });
+      // Real series
+      let val = 100;
+      const real = months.map(_ => (val += normal(2.2, 4), Math.max(40, val)));
+      // AI forecast next 6 months
+      let last = real[real.length - 1];
+      const fcMonths = Array.from({ length: 6 }, (_, i) => {
+        const d = new Date(); d.setMonth(d.getMonth() + i + 1); return d.toISOString().slice(0,7);
+      });
+      const forecast = fcMonths.map(() => (last += normal(3.0, 3)));
+      const ciLow = forecast.map((v) => v - 8);
+      const ciHigh = forecast.map((v) => v + 8);
+
+      const traceReal = { x: months, y: real, mode: 'lines+markers', name: 'Observed', line: { width: 3 } };
+      const traceFc = { x: fcMonths, y: forecast, mode: 'lines+markers', name: 'AI Forecast', line: { dash: 'dot', width: 3 } };
+      const traceBand = { x: [...fcMonths, ...fcMonths.slice().reverse()], y: [...ciHigh, ...ciLow.slice().reverse()], fill: 'toself', fillcolor: 'rgba(124,92,255,.18)', line: { width: 0 }, name: '95% CI' };
+
+      Plotly.newPlot('chartTimeseries', [traceReal, traceBand, traceFc], {
+        margin: { t: 10, r: 10, b: 40, l: 40 },
+        paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+        xaxis: { title: 'Month', gridcolor: 'rgba(255,255,255,.08)' },
+        yaxis: { title: 'Metric', gridcolor: 'rgba(255,255,255,.08)' },
+        legend: { orientation: 'h' }
+      }, { displayModeBar: false, responsive: true });
+    }
+
+    function renderHistogram() {
+      // Real vs synthetic class probabilities
+      const real = Array.from({ length: 400 }, () => Math.min(1, Math.max(0, normal(.6, .15))));
+      const synth = Array.from({ length: 400 }, () => Math.min(1, Math.max(0, normal(.55, .18))));
+      const t1 = { x: real, type: 'histogram', opacity: .7, nbinsx: 30, name: 'Real' };
+      const t2 = { x: synth, type: 'histogram', opacity: .6, nbinsx: 30, name: 'Synthetic' };
+      Plotly.newPlot('chartHistogram', [t1, t2], {
+        barmode: 'overlay',
+        margin: { t: 10, r: 10, b: 40, l: 40 },
+        paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+        xaxis: { title: 'Class Probability', gridcolor: 'rgba(255,255,255,.08)' },
+        yaxis: { title: 'Count', gridcolor: 'rgba(255,255,255,.08)' },
+        legend: { orientation: 'h' }
+      }, { displayModeBar: false, responsive: true });
+    }
+
+    function renderHeatmap() {
+      // Confusion matrix (demo)
+      const labels = ['Negative','Neutral','Positive'];
+      const mat = [
+        [85, 10, 5],
+        [9, 78, 13],
+        [6, 12, 82]
+      ];
+      Plotly.newPlot('chartHeatmap', [{
+        z: mat, x: labels, y: labels, type: 'heatmap', showscale: true,
+        hovertemplate: 'Predicted %{x}<br>Actual %{y}<br>%{z}<extra></extra>'
+      }], {
+        margin: { t: 10, r: 10, b: 40, l: 60 },
+        paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+        xaxis: { title: 'Predicted', gridcolor: 'rgba(255,255,255,.08)' },
+        yaxis: { title: 'Actual', gridcolor: 'rgba(255,255,255,.08)' }
+      }, { displayModeBar: false, responsive: true });
+    }
+
+    function renderScatter() {
+      // Two features with mild correlation + color by class
+      const n = 300; const xs = [], ys = [], cls = [];
+      for (let i = 0; i < n; i++) {
+        const c = Math.random() < .5 ? 0 : 1; // two classes
+        const x = c ? normal(60, 10) : normal(40, 10);
+        const y = c ? x * .6 + normal(10, 8) : x * .3 + normal(18, 8);
+        xs.push(x); ys.push(y); cls.push(c);
+      }
+      const t0 = { x: xs.filter((_,i)=>cls[i]===0), y: ys.filter((_,i)=>cls[i]===0), mode: 'markers', name: 'Class 0', type: 'scattergl' };
+      const t1 = { x: xs.filter((_,i)=>cls[i]===1), y: ys.filter((_,i)=>cls[i]===1), mode: 'markers', name: 'Class 1', type: 'scattergl' };
+      Plotly.newPlot('chartScatter', [t0, t1], {
+        margin: { t: 10, r: 10, b: 40, l: 50 },
+        paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+        xaxis: { title: 'Feature A', gridcolor: 'rgba(255,255,255,.08)' },
+        yaxis: { title: 'Feature B', gridcolor: 'rgba(255,255,255,.08)' },
+        legend: { orientation: 'h' }
+      }, { displayModeBar: false, responsive: true });
+    }
+
+    renderTimeSeries();
+    renderHistogram();
+    renderHeatmap();
+    renderScatter();
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+  <!--
+  ============================
+  📦 How to deploy on GitHub Pages
+  ============================
+  1) Create a new repository named: yourusername.github.io
+  2) Add this single file as index.html (commit to main branch)
+  3) In Settings → Pages, ensure Source = Deploy from a branch → main /(root)
+  4) Your site will be live at https://yourusername.github.io
+
+  Optional: If you prefer a project site (not user site), name the repo anything;
+  then enable Pages from Settings and your URL will be:
+  https://yourusername.github.io/<repo-name>
+
+  Customize:
+  - Replace placeholders (yourusername, Your Name, resume link)
+  - Change colors in :root, edit projects[] array for real links
+  - Swap the Formspree URL in the form action with your ID
+  - Embed Tableau/Power BI/Streamlit by adding <iframe> panels in the Visualizations section
+  -->
+</body>
+</html>
