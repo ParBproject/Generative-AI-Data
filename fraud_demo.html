@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Synthetic Fraud Data Demo</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    body {font-family: Arial, sans-serif; margin:40px; background:#f5f6fa;}
+    #chart {width:100%;max-width:700px;height:450px;margin-top:20px;}
+    label {font-weight:bold;}
+  </style>
+</head>
+<body>
+  <h1>Synthetic Fraud Detection Demo</h1>
+  <p>Adjust the slider to change the percentage of fraudulent transactions in the synthetic dataset.</p>
+  <label for="rate">Fraud percentage: <span id="lblRate">5</span>%</label>
+  <input type="range" id="rate" min="1" max="20" value="5" />
+  <div id="chart"></div>
+  <script>
+    function generateData(fraudPct) {
+      const total = 1000;
+      const fraudCount = Math.round(total * fraudPct / 100);
+      const legitCount = total - fraudCount;
+      const legitX = [], legitY = [], fraudX = [], fraudY = [];
+      for (let i = 0; i < legitCount; i++) {
+        legitX.push(Math.random() * 100);
+        legitY.push(Math.random() * 100);
+      }
+      for (let i = 0; i < fraudCount; i++) {
+        fraudX.push(70 + Math.random() * 30); // higher amounts
+        fraudY.push(70 + Math.random() * 30); // later times
+      }
+      const traceLegit = {x: legitX, y: legitY, mode:'markers', name:'Legit', marker:{color:'rgba(0,123,255,0.7)'}};
+      const traceFraud = {x: fraudX, y: fraudY, mode:'markers', name:'Fraud', marker:{color:'rgba(220,53,69,0.8)'}};
+      Plotly.newPlot('chart', [traceLegit, traceFraud], {
+        xaxis:{title:'Transaction Amount'},
+        yaxis:{title:'Transaction Time'},
+        margin:{t:30}
+      }, {responsive:true});
+    }
+    const slider = document.getElementById('rate');
+    const label = document.getElementById('lblRate');
+    slider.addEventListener('input', () => {
+      label.textContent = slider.value;
+      generateData(parseInt(slider.value));
+    });
+    generateData(parseInt(slider.value));
+  </script>
+</body>
+</html>
