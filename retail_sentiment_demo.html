@@ -6,29 +6,47 @@
   <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
   <script type="module">
     import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.11.0';
-    let classifier;
+    let sentimentModel, topicModel, summaryModel;
     async function init() {
-      classifier = await pipeline('text-classification', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
-      document.getElementById('status').innerText = 'Model loaded.';
+      [sentimentModel, topicModel, summaryModel] = await Promise.all([
+        pipeline('text-classification', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english'),
+        pipeline('zero-shot-classification', 'Xenova/nli-deberta-v3-xsmall'),
+        pipeline('summarization', 'Xenova/distilbart-cnn-12-6')
+      ]);
+      document.getElementById('status').innerText = 'Models loaded.';
     }
     init();
     document.getElementById('analyze').addEventListener('click', async () => {
       const text = document.getElementById('review').value.trim();
       if (!text) return;
       document.getElementById('status').innerText = 'Analyzing...';
-      const out = await classifier(text, { topk: 2 });
-      const data = [
+
+      const [sentimentOut, topicOut, summaryOut] = await Promise.all([
+        sentimentModel(text, { topk: 2 }),
+        topicModel(text, {
+          candidate_labels: ['price', 'quality', 'shipping', 'customer service', 'design', 'usability']
+        }),
+        summaryModel(text, { max_new_tokens: 60 })
+      ]);
+
+      const sentimentData = [
         { x: ['Positive', 'Negative'], y: [0,0], type: 'bar', marker: { color: ['#22c55e', '#ef4444'] }}
       ];
-      for (const o of out) {
-        if (o.label === 'POSITIVE') data[0].y[0] = o.score;
-        else data[0].y[1] = o.score;
+      for (const o of sentimentOut) {
+        if (o.label === 'POSITIVE') sentimentData[0].y[0] = o.score;
+        else sentimentData[0].y[1] = o.score;
       }
-      Plotly.newPlot('chart', data, {yaxis:{range:[0,1],title:'Confidence'},margin:{t:30}});
-      const sentiment = data[0].y[0] >= data[0].y[1] ? 'Positive 😀' : 'Negative 😞';
-      const conf = Math.max(...data[0].y) * 100;
+      Plotly.newPlot('chart', sentimentData, {yaxis:{range:[0,1],title:'Confidence'},margin:{t:30},title:'Sentiment'});
+
+      const topicData = [{x: topicOut.labels, y: topicOut.scores, type: 'bar', marker:{color:'#3b82f6'}}];
+      Plotly.newPlot('topicChart', topicData, {yaxis:{range:[0,1],title:'Relevance'},margin:{t:30},title:'Topics'});
+
+      const sentiment = sentimentData[0].y[0] >= sentimentData[0].y[1] ? 'Positive 😀' : 'Negative 😞';
+      const conf = Math.max(...sentimentData[0].y) * 100;
       document.getElementById('status').innerText = `${sentiment} (confidence: ${conf.toFixed(1)}%)`;
+      document.getElementById('summary').innerText = summaryOut[0].summary_text.trim();
     });
+
     document.getElementById('random').addEventListener('click', () => {
       const samples = [
         'This phone case broke after one week of use.',
@@ -44,17 +62,23 @@
   <style>
     body {font-family: Arial, sans-serif; margin:40px; background:#f5f6fa;}
     textarea {width:100%;max-width:700px;height:100px;}
-    #chart {width:100%;max-width:700px;height:450px;margin-top:20px;}
+    #charts {display:flex;flex-wrap:wrap;gap:20px;margin-top:20px;}
+    #chart,#topicChart {width:100%;max-width:450px;height:450px;}
     button {margin-top:10px;}
+    #summary {margin-top:20px;max-width:700px;background:#fff;padding:10px;border-radius:4px;}
   </style>
 </head>
 <body>
   <h1>AI-Driven Review Sentiment (Retail)</h1>
-  <p>Enter a product review and analyze its sentiment.</p>
+  <p>Enter a product review to explore sentiment, topics and a GPT-style summary.</p>
   <textarea id="review" placeholder="This product is amazing!"></textarea><br />
-  <button id="analyze">Analyze Sentiment</button>
+  <button id="analyze">Analyze</button>
   <button id="random">Random Example</button>
-  <div id="status">Loading model...</div>
-  <div id="chart"></div>
+  <div id="status">Loading models...</div>
+  <div id="charts">
+    <div id="chart"></div>
+    <div id="topicChart"></div>
+  </div>
+  <div id="summary"></div>
 </body>
 </html>
