@@ -2,6 +2,7 @@
 Using generative AI Data to solve problems.
 
 ## Live Demos
-- [Retail Review Sentiment](retail_sentiment_demo.html): interactive sentiment analysis for product reviews.
+- [Retail Review Sentiment](retail_sentiment_demo.html): sentiment & topics with GPT summaries.
 - [Synthetic Fraud Detection](fraud_demo.html): tweak fraud rates and visualize transactions.
-- [Automated Data Storytelling](automated_data_storytelling_demo.html): pipelines that produce GPT summaries next to interactive charts with a polished control panel and dataset preview.
+- [Automated Data Storytelling](automated_data_storytelling_demo.html): pipelines that produce GPT summaries next to interactive charts.
+- [Churn Prediction Dashboard](churn_demo.html): explore churn risk with feature insights, SHAP-style visuals, and what-if analysis.
