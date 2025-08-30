@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Churn Prediction Demo</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    body {font-family: Arial, sans-serif; margin:40px; background:#f5f6fa;}
+    #gauge {width:600px; height:400px; margin-top:20px;}
+    label {font-weight:bold; display:block; margin-top:20px;}
+  </style>
+</head>
+<body>
+  <h1>Churn Prediction Demo</h1>
+  <p>Adjust the customer parameters to see the predicted churn probability.</p>
+  <label for="tenure">Tenure (months): <span id="lblTenure">12</span></label>
+  <input type="range" id="tenure" min="1" max="72" value="12" />
+  <label for="charges">Monthly Charges ($): <span id="lblCharges">70</span></label>
+  <input type="range" id="charges" min="20" max="120" value="70" />
+  <div id="gauge"></div>
+  <script>
+    function predict(tenure, charges) {
+      const a = -4.0, b1 = -0.05, b2 = 0.04;
+      const z = a + b1 * tenure + b2 * charges;
+      return 1 / (1 + Math.exp(-z));
+    }
+    function update() {
+      const t = parseInt(document.getElementById('tenure').value);
+      const c = parseInt(document.getElementById('charges').value);
+      document.getElementById('lblTenure').textContent = t;
+      document.getElementById('lblCharges').textContent = c;
+      const p = predict(t, c);
+      Plotly.react('gauge', [{
+        type: 'indicator',
+        mode: 'gauge+number',
+        value: Math.round(p * 100),
+        title: { text: 'Churn Probability (%)' },
+        gauge: { axis: { range: [0, 100] } }
+      }]);
+    }
+    document.getElementById('tenure').addEventListener('input', update);
+    document.getElementById('charges').addEventListener('input', update);
+    update();
+  </script>
+</body>
+</html>
