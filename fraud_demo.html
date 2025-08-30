@@ -12,39 +12,60 @@
 </head>
 <body>
   <h1>Synthetic Fraud Detection Demo</h1>
-  <p>Adjust the slider to change the percentage of fraudulent transactions in the synthetic dataset.</p>
-  <label for="rate">Fraud percentage: <span id="lblRate">5</span>%</label>
-  <input type="range" id="rate" min="1" max="20" value="5" />
+  <p>Use the controls to explore fraud rates, enforce class balance, and simulate concept drift.</p>
+  <div style="margin-top:10px;">
+    <label><input type="checkbox" id="balanced" /> Class-balanced</label>
+  </div>
+  <div style="margin-top:10px;">
+    <label for="rate">Fraud percentage: <span id="lblRate">5</span>%</label>
+    <input type="range" id="rate" min="1" max="50" value="5" />
+  </div>
+  <div style="margin-top:10px;">
+    <label for="drift">Drift level: <span id="lblDrift">0</span></label>
+    <input type="range" id="drift" min="0" max="40" value="0" />
+  </div>
   <div id="chart"></div>
   <script>
-    function generateData(fraudPct) {
+    function generateData(fraudPct, drift) {
       const total = 1000;
       const fraudCount = Math.round(total * fraudPct / 100);
       const legitCount = total - fraudCount;
       const legitX = [], legitY = [], fraudX = [], fraudY = [];
       for (let i = 0; i < legitCount; i++) {
-        legitX.push(Math.random() * 100);
-        legitY.push(Math.random() * 100);
+        legitX.push(Math.random() * 50 + drift);
+        legitY.push(Math.random() * 50 + drift);
       }
       for (let i = 0; i < fraudCount; i++) {
-        fraudX.push(70 + Math.random() * 30); // higher amounts
-        fraudY.push(70 + Math.random() * 30); // later times
+        fraudX.push(70 + Math.random() * 30);
+        fraudY.push(70 + Math.random() * 30);
       }
       const traceLegit = {x: legitX, y: legitY, mode:'markers', name:'Legit', marker:{color:'rgba(0,123,255,0.7)'}};
       const traceFraud = {x: fraudX, y: fraudY, mode:'markers', name:'Fraud', marker:{color:'rgba(220,53,69,0.8)'}};
       Plotly.newPlot('chart', [traceLegit, traceFraud], {
         xaxis:{title:'Transaction Amount'},
         yaxis:{title:'Transaction Time'},
-        margin:{t:30}
+        margin:{t:30},
       }, {responsive:true});
     }
-    const slider = document.getElementById('rate');
-    const label = document.getElementById('lblRate');
-    slider.addEventListener('input', () => {
-      label.textContent = slider.value;
-      generateData(parseInt(slider.value));
-    });
-    generateData(parseInt(slider.value));
+    const rate = document.getElementById('rate');
+    const drift = document.getElementById('drift');
+    const lblRate = document.getElementById('lblRate');
+    const lblDrift = document.getElementById('lblDrift');
+    const balanced = document.getElementById('balanced');
+
+    function update() {
+      const pct = balanced.checked ? 50 : parseInt(rate.value);
+      const driftVal = parseInt(drift.value);
+      lblRate.textContent = pct;
+      lblDrift.textContent = driftVal;
+      rate.disabled = balanced.checked;
+      generateData(pct, driftVal);
+    }
+
+    rate.addEventListener('input', update);
+    drift.addEventListener('input', update);
+    balanced.addEventListener('change', update);
+    update();
   </script>
 </body>
 </html>
