@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Automated Data Storytelling Demo</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <style>
+    body {font-family: Arial, sans-serif; margin:40px; background:#f5f6fa;}
+    #chart {width:100%;max-width:700px;height:450px;margin-top:20px;}
+    label {font-weight:bold;}
+    #summary {margin-top:20px;padding:10px;background:#fff;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.1);}
+  </style>
+</head>
+<body>
+  <h1>Automated Data Storytelling Demo</h1>
+  <p>Upload a CSV or load the sample dataset to generate narrative summaries beside interactive charts.</p>
+  <input type="file" id="fileInput" accept=".csv" />
+  <button id="loadSample">Load Sample Dataset</button>
+  <div style="margin-top:20px;">
+    <label for="columnSelect">Numeric column:</label>
+    <select id="columnSelect"></select>
+  </div>
+  <div id="chart"></div>
+  <div id="summary"></div>
+
+  <script>
+    let dataset = [];
+    function parseCSV(text) {
+      const [header, ...rows] = text.trim().split(/\r?\n/);
+      const cols = header.split(',');
+      return rows.map(r => {
+        const vals = r.split(',');
+        const obj = {};
+        cols.forEach((c, i) => obj[c] = vals[i]);
+        return obj;
+      });
+    }
+    function updateColumns() {
+      const select = document.getElementById('columnSelect');
+      select.innerHTML = '';
+      if (!dataset.length) return;
+      const cols = Object.keys(dataset[0]).filter(c => !isNaN(parseFloat(dataset[0][c])));
+      cols.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c; select.appendChild(opt);
+      });
+      if (cols.length) generateStory(cols[0]);
+    }
+    function generateStory(column) {
+      const values = dataset.map(r => parseFloat(r[column])).filter(v => !isNaN(v));
+      if (!values.length) return;
+      const mean = values.reduce((a,b)=>a+b,0)/values.length;
+      const min = Math.min(...values);
+      const max = Math.max(...values);
+      const summary = `The average of <strong>${column}</strong> is <strong>${mean.toFixed(2)}</strong> with a range from <strong>${min.toFixed(2)}</strong> to <strong>${max.toFixed(2)}</strong> based on ${values.length} records.`;
+      document.getElementById('summary').innerHTML = summary;
+      Plotly.newPlot('chart', [{x: values, type:'histogram', marker:{color:'#7c5cff'}}], {margin:{t:30}, xaxis:{title:column}}, {responsive:true});
+    }
+    document.getElementById('columnSelect').addEventListener('change', e => generateStory(e.target.value));
+    document.getElementById('fileInput').addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => { dataset = parseCSV(ev.target.result); updateColumns(); };
+      reader.readAsText(file);
+    });
+    document.getElementById('loadSample').addEventListener('click', () => {
+      fetch('https://raw.githubusercontent.com/mwaskom/seaborn-data/master/tips.csv')
+        .then(res => res.text())
+        .then(text => { dataset = parseCSV(text); updateColumns(); });
+    });
+  </script>
+</body>
+</html>
