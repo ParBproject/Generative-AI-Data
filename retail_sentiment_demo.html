@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Retail Review Sentiment Demo</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <script type="module">
+    import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.11.0';
+    let classifier;
+    async function init() {
+      classifier = await pipeline('text-classification', 'Xenova/distilbert-base-uncased-finetuned-sst-2-english');
+      document.getElementById('status').innerText = 'Model loaded.';
+    }
+    init();
+    document.getElementById('analyze').addEventListener('click', async () => {
+      const text = document.getElementById('review').value.trim();
+      if (!text) return;
+      document.getElementById('status').innerText = 'Analyzing...';
+      const out = await classifier(text, { topk: 2 });
+      const data = [
+        { x: ['Positive', 'Negative'], y: [0,0], type: 'bar', marker: { color: ['#22c55e', '#ef4444'] }}
+      ];
+      for (const o of out) {
+        if (o.label === 'POSITIVE') data[0].y[0] = o.score;
+        else data[0].y[1] = o.score;
+      }
+      Plotly.newPlot('chart', data, {yaxis:{range:[0,1],title:'Confidence'},margin:{t:30}});
+      const sentiment = data[0].y[0] >= data[0].y[1] ? 'Positive 😀' : 'Negative 😞';
+      const conf = Math.max(...data[0].y) * 100;
+      document.getElementById('status').innerText = `${sentiment} (confidence: ${conf.toFixed(1)}%)`;
+    });
+    document.getElementById('random').addEventListener('click', () => {
+      const samples = [
+        'This phone case broke after one week of use.',
+        'Absolutely love these sneakers, so comfy!',
+        'The blender is fine but a bit loud.',
+        'Terrible customer service at the store.',
+        'Great value for the price, will buy again.'
+      ];
+      const sample = samples[Math.floor(Math.random() * samples.length)];
+      document.getElementById('review').value = sample;
+    });
+  </script>
+  <style>
+    body {font-family: Arial, sans-serif; margin:40px; background:#f5f6fa;}
+    textarea {width:100%;max-width:700px;height:100px;}
+    #chart {width:100%;max-width:700px;height:450px;margin-top:20px;}
+    button {margin-top:10px;}
+  </style>
+</head>
+<body>
+  <h1>AI-Driven Review Sentiment (Retail)</h1>
+  <p>Enter a product review and analyze its sentiment.</p>
+  <textarea id="review" placeholder="This product is amazing!"></textarea><br />
+  <button id="analyze">Analyze Sentiment</button>
+  <button id="random">Random Example</button>
+  <div id="status">Loading model...</div>
+  <div id="chart"></div>
+</body>
+</html>
