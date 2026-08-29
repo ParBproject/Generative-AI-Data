@@ -1,63 +1,53 @@
-# Generative-AI-Data
+# Generative AI Data Portfolio
 
-Using generative AI Data to solve problems.
+[![HTML](https://img.shields.io/badge/HTML5-Interactive_Demos-E34F26?logo=html5&logoColor=white)](https://parbproject.github.io/Generative-AI-Data/)
+[![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-222?logo=github)](https://parbproject.github.io/Generative-AI-Data/)
 
-## Live Demos
+A collection of browser-based analytics demonstrations that turn data into clear, interactive stories. The portfolio explores practical uses of generative AI across customer feedback, fraud analysis, churn risk, and automated narrative reporting.
 
-- [Retail Review Sentiment](retail_sentiment_demo.html): sentiment & topics with
-  GPT summaries.
-- [Synthetic Fraud Detection](fraud_demo.html): tweak fraud rates and visualize transactions.
-- [Churn Prediction Dashboard](churn_demo.html): explore churn risk with feature insights, SHAP-style visuals, and what-if analysis.
+## Portfolio
 
+| Project | Business question | Demonstration |
+|---|---|---|
+| Retail sentiment | What are customers saying, and which themes matter most? | [Open demo](https://parbproject.github.io/Generative-AI-Data/retail_sentiment_demo.html) |
+| Fraud exploration | How does fraud prevalence change transaction patterns? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
+| Churn analysis | Which factors appear to increase customer churn risk? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
+| Automated storytelling | How can analysis be translated into a concise narrative? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
 
+## Preview
 
 <p align="center">
-  <img src="1.png" alt="1" width="600"><br>
-  <em>Figure 1: Design Creation</em>
+  <img src="1.png" alt="Analytics interface design" width="720">
 </p>
 
 <p align="center">
-  <img src="2.png" alt="2" width="600"><br>
-  <em>Figure 2: Chart Evaluation</em>
+  <img src="2.png" alt="Chart evaluation interface" width="720">
 </p>
 
-Turning data into interactive stories — with Generative AI
-I build AI-assisted analytics, from data pipelines to dashboards to LLM-driven insights. Explore my projects and visualizations below.
+## Skills Demonstrated
 
-Generative AI Data Analyst
+- Translating business questions into focused analytics experiences
+- Data storytelling, dashboard design, and visual hierarchy
+- Generative-AI-assisted summaries and explanatory content
+- Sentiment, fraud, and churn use-case design
+- Static web deployment with GitHub Pages
 
-Turning data into interactive stories with Generative AI.
-This portfolio showcases AI-assisted analytics — from data pipelines to dashboards to LLM-driven insights.
+## Repository Structure
 
-🚀 Explore projects, visualizations, and case studies designed to bridge data science, business insights, and generative AI.
+~~~text
+.
+├── index.html
+├── retail_sentiment_demo.html
+├── fraud_demo.html
+├── churn_demo.html
+├── automated_data_storytelling_demo.html
+└── images/
+~~~
 
-📊 Skills & Tools
+## Run Locally
 
-Programming & Data: Python, Pandas, SQL, scikit-learn
+Clone the repository and open "index.html" in a browser. No build process or package installation is required.
 
-Visualization: Plotly, D3, Tableau, Power BI, Streamlit
+## Data Note
 
-Generative AI & LLMs: LangChain, Prompt Engineering, Hugging Face
-
-DevOps & Workflow: Git, CI/CD
-
-📈 Sample KPIs (Demo)
-
-Dashboards Shipped: 13
-
-Models Evaluated: 10
-
-Avg Uplift: 8.0%
-
-Stakeholder NPS: 9.1/10
-
-(Synthetic data used for demo purposes)
-
-📂 Projects
-1. AI-Driven Review Sentiment (Retail)
-
-LLM-assisted sentiment + topic modeling with Plotly dashboards and GPT-generated summaries.
-
-🛠 Tools: Python, LLM, Plotly, NLP
-
-🔗 GitHub Repo
+The examples are portfolio demonstrations and use synthetic or illustrative data. Any displayed performance figures should be interpreted as demo outputs rather than production results.
