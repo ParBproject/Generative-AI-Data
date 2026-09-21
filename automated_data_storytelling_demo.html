@@ -36,11 +36,18 @@
 
   <script>
     let dataset = [];
+    function unquote(cell) {
+      const value = String(cell).trim();
+      if (value.length >= 2 && value.startsWith('"') && value.endsWith('"')) {
+        return value.slice(1, -1).replace(/""/g, '"');
+      }
+      return value;
+    }
     function parseCSV(text) {
       const [header, ...rows] = text.trim().split(/\r?\n/);
-      const cols = header.split(',');
-      return rows.map(r => {
-        const vals = r.split(',');
+      const cols = header.split(',').map(unquote);
+      return rows.filter(r => r.trim()).map(r => {
+        const vals = r.split(',').map(unquote);
         const obj = {};
         cols.forEach((c, i) => obj[c] = vals[i]);
         return obj;
