@@ -1,5 +1,14 @@
 # Generative AI Data Portfolio
 
+## For an AI data analyst application
+
+**Show this after the stroke casebook, not instead of it.** The sentiment page actually runs a transformer in the browser. The churn page is a two-coefficient sketch. The story page writes min, mean, and max next to a histogram. Say that out loud. Do not claim LangChain, Power BI, Tableau, or a production uplift.
+
+<p align="center"><img src="docs/screenshots/portfolio_home.png" alt="Generative AI demo index with honest labels" width="100%"></p>
+<p align="center"><img src="docs/screenshots/sentiment_demo.png" alt="Retail sentiment demo" width="100%"></p>
+<p align="center"><img src="docs/screenshots/churn_demo.png" alt="Churn what-if demo" width="100%"></p>
+<p align="center"><img src="docs/screenshots/story_demo.png" alt="Data storytelling demo" width="100%"></p>
+
 [![HTML](https://img.shields.io/badge/HTML5-Interactive_Demos-E34F26?logo=html5&logoColor=white)](https://parbproject.github.io/Generative-AI-Data/)
 [![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-222?logo=github)](https://parbproject.github.io/Generative-AI-Data/)
 
