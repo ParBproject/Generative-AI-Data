@@ -2,7 +2,7 @@
 
 ## For an AI data analyst application
 
-**Show this after the stroke casebook, not instead of it.** The sentiment page actually runs a transformer in the browser. The churn page is a two-coefficient sketch. The story page writes min, mean, and max next to a histogram. Say that out loud. Do not claim LangChain, Power BI, Tableau, or a production uplift.
+**Show this after the stroke casebook, not instead of it.** The sentiment page runs DistilBERT in the browser. The churn page is a two-feature logistic sketch. The story page writes minimum, mean, and maximum next to a histogram, then checks example claims against those stats. The fraud page draws a synthetic cloud. Say that out loud. Do not claim LangChain, Power BI, Tableau, dbt, or a production uplift.
 
 <p align="center"><img src="docs/screenshots/portfolio_home.png" alt="Generative AI demo index with honest labels" width="100%"></p>
 <p align="center"><img src="docs/screenshots/sentiment_demo.png" alt="Retail sentiment demo" width="100%"></p>
@@ -12,7 +12,7 @@
 [![HTML](https://img.shields.io/badge/HTML5-Interactive_Demos-E34F26?logo=html5&logoColor=white)](https://parbproject.github.io/Generative-AI-Data/)
 [![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-222?logo=github)](https://parbproject.github.io/Generative-AI-Data/)
 
-A collection of browser-based analytics demonstrations that turn data into clear, interactive stories. The portfolio explores practical uses of generative AI across customer feedback, fraud analysis, churn risk, and automated narrative reporting.
+Four browser demos. The data is synthetic or illustrative. Sentiment runs DistilBERT in the browser. Churn is a two-feature logistic sketch. Storytelling prints a column's minimum, mean, and maximum beside a histogram, then checks example claims against those stats. Fraud draws a synthetic cloud.
 
 ## Portfolio
 
@@ -21,25 +21,16 @@ A collection of browser-based analytics demonstrations that turn data into clear
 | Retail sentiment | What are customers saying, and which themes matter most? | [Open demo](https://parbproject.github.io/Generative-AI-Data/retail_sentiment_demo.html) |
 | Fraud exploration | How does fraud prevalence change transaction patterns? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
 | Churn analysis | Which factors appear to increase customer churn risk? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
-| Automated storytelling | How can analysis be translated into a concise narrative? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
-
-## Preview
-
-<p align="center">
-  <img src="1.png" alt="Analytics interface design" width="720">
-</p>
-
-<p align="center">
-  <img src="2.png" alt="Chart evaluation interface" width="720">
-</p>
+| Automated storytelling | What do the column minimum, mean, and maximum actually support? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
 
 ## Skills Demonstrated
 
-- Translating business questions into focused analytics experiences
-- Data storytelling, dashboard design, and visual hierarchy
-- Generative-AI-assisted summaries and explanatory content
-- Sentiment, fraud, and churn use-case design
-- Static web deployment with GitHub Pages
+- Four demos on synthetic or illustrative data
+- In-browser DistilBERT sentiment
+- Storytelling as column minimum, mean, and maximum, with example claims checked against those stats
+- Churn as a two-feature logistic sketch
+- Fraud as a synthetic point cloud
+- Static HTML on GitHub Pages
 
 ## Repository Structure
 
