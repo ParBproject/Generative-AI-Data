@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generative AI Data Analyst – Portfolio</title>
   <meta name="description" content="Portfolio of a Generative AI Data Analyst: projects, interactive visualizations, dashboards, and contact." />
-  <meta name="author" content="Your Name" />
+  <meta name="author" content="ParBproject" />
   <meta property="og:title" content="Generative AI Data Analyst – Portfolio" />
   <meta property="og:description" content="Projects, dashboards, and AI-powered data storytelling." />
   <meta property="og:type" content="website" />
@@ -154,7 +154,7 @@
     <section class="hero" id="home">
       <div>
         <h1 class="title">Turning data into interactive stories — with Generative AI</h1>
-        <p class="subtitle">I build AI-assisted analytics, from data pipelines to dashboards to LLM-driven insights. Explore my projects and visualizations below.</p>
+        <p class="subtitle">Four browser demos for an AI data analyst portfolio: review text, a churn what-if, a narrative next to a chart, and a synthetic fraud sketch. The numbers on this page are labeled as demos.</p>
         <div class="cta">
           <a class="btn primary" href="#projects">View Projects</a>
           <a class="btn" href="#visualizations">See Visualizations</a>
@@ -163,23 +163,19 @@
       </div>
       <div class="hero-card" aria-label="At-a-glance metrics">
         <div class="kpis" id="kpis"></div>
-        <div class="muted" style="margin-top:10px">Sample KPIs auto-generated with synthetic data for demo purposes.</div>
+        <div class="muted" style="margin-top:10px">Labels for this page only. Not performance metrics.</div>
       </div>
     </section>
 
     <!-- Skills -->
     <section aria-labelledby="skills-title">
       <h2 class="section-title" id="skills-title">Skills & Tools</h2>
-      <p class="muted">Python • Pandas • SQL • Plotly • Power BI • Tableau • Streamlit • scikit-learn • LangChain • Prompt Engineering • Hugging Face • Git/GitHub</p>
+      <p class="muted">Plotly • Browser Transformers (sentiment demo) • Static HTML • GitHub Pages</p>
       <div class="skills" role="list">
-        <div class="chip" role="listitem"><span class="dot"></span> Python / Pandas</div>
-        <div class="chip" role="listitem"><span class="dot"></span> SQL / dbt</div>
-        <div class="chip" role="listitem"><span class="dot"></span> Plotly / D3</div>
-        <div class="chip" role="listitem"><span class="dot"></span> Tableau / Power BI</div>
-        <div class="chip" role="listitem"><span class="dot"></span> Streamlit</div>
-        <div class="chip" role="listitem"><span class="dot"></span> scikit-learn</div>
-        <div class="chip" role="listitem"><span class="dot"></span> LLMs / LangChain</div>
-        <div class="chip" role="listitem"><span class="dot"></span> Git / CI-CD</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Plotly</div>
+        <div class="chip" role="listitem"><span class="dot"></span> In-browser sentiment model</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Narrative next to a chart</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Honest demo labels</div>
       </div>
     </section>
 
@@ -216,33 +212,18 @@
     <!-- About -->
     <section id="about" aria-labelledby="about-title">
       <h2 class="section-title" id="about-title">About Me</h2>
-      <p class="muted">I'm a data analyst who gets excited about generative AI. I love turning raw numbers into stories people can understand and designing visuals that invite curiosity. I build reliable pipelines, experiment with LLMs for fresh insights and synthetic data, and enjoy sharing what I learn along the way.</p>
+      <p class="muted">These pages are interview demos, not production models. The sentiment page loads DistilBERT-class models in the browser. The churn page is a two-feature logistic sketch. The storytelling page summarizes a column. The fraud page draws a synthetic cloud. Sibling repos — Bayline fulfillment and the stroke casebook — are where the analyst work lives.</p>
     </section>
 
     <!-- Contact -->
     <section id="contact" aria-labelledby="contact-title">
       <h2 class="section-title" id="contact-title">Contact</h2>
-      <p class="muted">Want to collaborate or have a role in mind? Reach me via the form below or connect on <a href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>.</p>
-      <form class="panel" style="max-width:680px" action="https://formspree.io/f/xdklejyj" method="POST">
-        <label>
-          <span>Name</span>
-          <input name="name" required style="width:100%; margin-top:6px; margin-bottom:12px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#0e1430; color:var(--text)"/>
-        </label>
-        <label>
-          <span>Email</span>
-          <input type="email" name="email" required style="width:100%; margin-top:6px; margin-bottom:12px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#0e1430; color:var(--text)"/>
-        </label>
-        <label>
-          <span>Message</span>
-          <textarea name="message" rows="5" required style="width:100%; margin-top:6px; margin-bottom:12px; padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,.12); background:#0e1430; color:var(--text)"></textarea>
-        </label>
-        <button class="btn primary" type="submit">Send message</button>
-      </form>
+      <p class="muted">The code for these demos is in <a href="https://github.com/ParBproject/Generative-AI-Data" target="_blank" rel="noopener">this repository</a>.</p>
     </section>
   </main>
 
   <footer>
-    <div>© <span id="year"></span> • Your Name • <a href="/resume.pdf">Resume</a></div>
+    <div>© <span id="year"></span> • ParBproject</div>
   </footer>
 
   <script>
@@ -252,40 +233,40 @@
 
     // Fake KPI generator
     const kpiData = [
-      { label: 'Dashboards Shipped', value: () => Math.floor(rand(8, 20)) },
-      { label: 'Models Evaluated', value: () => Math.floor(rand(4, 12)) },
-      { label: 'Avg Uplift', value: () => (rand(4, 18)).toFixed(1) + '%' },
-      { label: 'Stakeholder NPS', value: () => (rand(8.4, 9.9)).toFixed(1) + '/10' },
+      { label: 'Demos in this repo', value: () => '4' },
+      { label: 'Production models', value: () => '0' },
+      { label: 'Sentiment stack', value: () => 'In-browser' },
+      { label: 'Data', value: () => 'Synthetic' },
     ];
 
     // Projects (replace with your real links and descriptions)
     const projects = [
       {
         title: 'AI-Driven Review Sentiment (Retail)',
-        blurb: 'LLM-assisted sentiment + topic modeling; Plotly dashboard and GPT summaries.',
-        tags: ['Python', 'LLM', 'Plotly', 'NLP'],
-        repo: 'https://github.com/yourusername/retail-sentiment-llm',
+        blurb: 'DistilBERT sentiment, zero-shot topics, and a short summary. Runs in the browser.',
+        tags: ['Transformers', 'Plotly'],
+        repo: 'https://github.com/ParBproject/Generative-AI-Data',
         live: 'retail_sentiment_demo.html'
       },
       {
         title: 'Synthetic Data for Fraud Detection',
-        blurb: 'Generated class-balanced samples with controllable drift to stress-test models.',
-        tags: ['Python', 'GAN', 'sklearn'],
-        repo: 'https://github.com/yourusername/fraud-synth',
+        blurb: 'A slider that redraws a synthetic fraud cloud. Not a trained detector.',
+        tags: ['Synthetic', 'Plotly'],
+        repo: 'https://github.com/ParBproject/Generative-AI-Data',
         live: 'fraud_demo.html'
       },
       {
         title: 'Automated Data Storytelling',
-        blurb: 'Pipelines that produce GPT summaries next to interactive charts.',
-        tags: ['LangChain', 'Streamlit', 'Plotly'],
-        repo: 'https://github.com/yourusername/data-storytelling',
+        blurb: 'Mean, min, and max written beside a histogram. A template for a checked narrative, not an LLM.',
+        tags: ['CSV', 'Plotly'],
+        repo: 'https://github.com/ParBproject/Generative-AI-Data',
         live: 'automated_data_storytelling_demo.html'
       },
       {
         title: 'Churn Prediction Dashboard',
-        blurb: 'Feature insights + SHAP-style visuals and what-if analysis.',
-        tags: ['Power BI', 'Python', 'XGBoost'],
-        repo: 'https://github.com/yourusername/churn-dashboard',
+        blurb: 'Two sliders and a hand-set logistic. Useful for explaining a coefficient, not a churn model.',
+        tags: ['What-if', 'Plotly'],
+        repo: 'https://github.com/ParBproject/Generative-AI-Data',
         live: 'churn_demo.html'
       }
     ];
@@ -413,25 +394,5 @@
 
     document.getElementById('year').textContent = new Date().getFullYear();
   </script>
-
-  <!--
-  ============================
-  📦 How to deploy on GitHub Pages
-  ============================
-  1) Create a new repository named: yourusername.github.io
-  2) Add this single file as index.html (commit to main branch)
-  3) In Settings → Pages, ensure Source = Deploy from a branch → main /(root)
-  4) Your site will be live at https://yourusername.github.io
-
-  Optional: If you prefer a project site (not user site), name the repo anything;
-  then enable Pages from Settings and your URL will be:
-  https://yourusername.github.io/<repo-name>
-
-  Customize:
-  - Replace placeholders (yourusername, Your Name, resume link)
-  - Change colors in :root, edit projects[] array for real links
-  - Swap the Formspree URL in the form action with your ID
-  - Embed Tableau/Power BI/Streamlit by adding <iframe> panels in the Visualizations section
-  -->
 </body>
 </html>
