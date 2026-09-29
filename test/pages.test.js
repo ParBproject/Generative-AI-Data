@@ -99,6 +99,16 @@ test('story demo renders text, not HTML, and does not depend on a third-party CS
   assert.match(demo, /summaryText/);
 });
 
+test('the starter template does not publish fabricated metrics or placeholder endpoints', function () {
+  const starter = read('generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html');
+  assert.match(starter, /unused starter template/);
+  assert.match(starter, /href="index\.html"/);
+  assert.match(starter, /retail_sentiment_demo\.html/);
+  assert.match(starter, new RegExp(cdn.PLOTLY_INTEGRITY));
+  assert.match(starter, /Illustrative band \(±8\)/);
+  assert.doesNotMatch(starter, /95% CI|yourusername|your-form-id|Avg Uplift|Stakeholder NPS|resume\.pdf|LangChain|Power BI|XGBoost|Formspree|toISOString/);
+});
+
 test('demo sources do not contain credential assignments', function () {
   const files = fs.readdirSync(path.join(root, 'js')).map(function (name) { return 'js/' + name; })
     .concat(livePages);
