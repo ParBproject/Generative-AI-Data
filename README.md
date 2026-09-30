@@ -12,16 +12,16 @@
 [![HTML](https://img.shields.io/badge/HTML5-Interactive_Demos-E34F26?logo=html5&logoColor=white)](https://parbproject.github.io/Generative-AI-Data/)
 [![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-222?logo=github)](https://parbproject.github.io/Generative-AI-Data/)
 
-A collection of browser-based analytics demonstrations that turn data into clear, interactive stories. The portfolio explores practical uses of generative AI across customer feedback, fraud analysis, churn risk, and automated narrative reporting.
+A collection of browser-based analytics demonstrations that turn data into clear, interactive stories. The portfolio explores customer-review text, a synthetic fraud scatter, a churn what-if, and a short column summary.
 
 ## Portfolio
 
 | Project | Business question | Demonstration |
 |---|---|---|
 | Retail sentiment | What are customers saying, and which themes matter most? | [Open demo](https://parbproject.github.io/Generative-AI-Data/retail_sentiment_demo.html) |
-| Fraud exploration | How does fraud prevalence change transaction patterns? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
-| Churn analysis | Which factors appear to increase customer churn risk? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
-| Automated storytelling | How can analysis be translated into a concise narrative? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
+| Fraud exploration | What does a synthetic cloud look like as the fraud share changes? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
+| Churn analysis | How does a hand-set logistic respond when tenure or charges change? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
+| Automated storytelling | What are the mean, minimum, and maximum of one numeric column? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
 
 ## Preview
 
@@ -50,13 +50,33 @@ A collection of browser-based analytics demonstrations that turn data into clear
 ├── fraud_demo.html
 ├── churn_demo.html
 ├── automated_data_storytelling_demo.html
+├── generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html
+├── js/
+├── test/
+├── docs/screenshots/
 └── images/
 ~~~
 
+`index.html` is the live homepage. `generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html` is an older starter kept so that path still resolves. It links back to the homepage.
+
 ## Run Locally
 
-Clone the repository and open "index.html" in a browser. No build process or package installation is required.
+Clone the repository and open `index.html` in a browser. No build process or package installation is required to view the pages.
+
+The sentiment demo fetches its library and models on the first analysis. Serve the folder over HTTP if the browser blocks that fetch from a local file:
+
+~~~bash
+python3 -m http.server
+~~~
+
+## Tests
+
+~~~bash
+node --test
+~~~
+
+GitHub Actions runs the same command on push and pull request. The check downloads the pinned Plotly and Transformers files and compares them with the integrity hashes in `js/cdn.js`.
 
 ## Data Note
 
-The examples are portfolio demonstrations and use synthetic or illustrative data. Any displayed performance figures should be interpreted as demo outputs rather than production results.
+The examples are portfolio demonstrations and use synthetic or illustrative data. The homepage band is a constant plus-or-minus 8 drawing. The churn page uses a hand-set two-coefficient logistic. Neither figure is a measured model result.
