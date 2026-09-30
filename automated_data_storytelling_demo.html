@@ -12,6 +12,12 @@
     #chart { width: 100%; max-width: 700px; height: 450px; margin-top: 20px; }
     label { font-weight: bold; }
     #summary { margin-top: 20px; padding: 10px; background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+    #factcheck { margin-top: 28px; }
+    #factcheck h2 { font-size: 20px; margin: 0 0 8px; }
+    #factcheckNote { margin: 0 0 8px; }
+    .claim { margin-top: 12px; padding: 10px; background: #fff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+    .claim p { margin: 8px 0; }
+    .etype { font-weight: bold; }
     a { color: #1d4ed8; }
     :focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
   </style>
@@ -20,7 +26,7 @@
   <main>
     <p><a href="index.html">Back to portfolio</a></p>
     <h1>Column summary demo</h1>
-    <p>The paragraph is the mean, minimum, and maximum of one numeric column. It is not written by a language model. The sample is a five-row synthetic table stored in this repo.</p>
+    <p>The paragraph is the mean, minimum, and maximum of one numeric column. It is not written by a language model. Example claims below are checked against those stats. The sample is a five-row synthetic table stored in this repo.</p>
     <label for="fileInput">CSV file</label>
     <input type="file" id="fileInput" accept=".csv,text/csv">
     <button id="loadSample" type="button">Load sample dataset</button>
@@ -30,6 +36,11 @@
     </div>
     <div id="chart" role="img" aria-label="Histogram of the selected numeric column"></div>
     <div id="summary" role="status" aria-live="polite">Load the sample or choose a CSV.</div>
+    <section id="factcheck" aria-labelledby="factcheck-title">
+      <h2 id="factcheck-title">Fact-check</h2>
+      <p id="factcheckNote">Example claims checked against the column stats. These sentences are written as examples. They are not from a language model, and they are not output from a production generator.</p>
+      <div id="factcheckList">Load a numeric column. Each example is then checked against that column's minimum, mean, maximum, and row count.</div>
+    </section>
   </main>
   <script src="js/demo-logic.js"></script>
   <script src="js/story-demo.js"></script>

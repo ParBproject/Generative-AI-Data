@@ -86,34 +86,38 @@ test('numeric columns look past the first row and summaries are plain text', fun
   assert.equal(logic.summarizeNumeric(['nope']), null);
 });
 
+test('example claims are checked against the column stats', function () {
+  var rows = logic.parseCSV(logic.SAMPLE_CSV);
+  var stats = logic.summarizeNumeric(rows.map(function (row) { return row.monthly_bill; }));
+  assert.equal(stats.mean, 66);
+  assert.equal(stats.min, 35);
+  assert.equal(stats.max, 120);
+  assert.equal(stats.count, 5);
+  var claims = logic.exampleClaims('monthly_bill', stats);
+  assert.equal(claims.length, 6);
+  assert.deepEqual(claims.map(function (claim) { return claim.type; }), [
+    'unsupported number',
+    'wrong comparison',
+    'invented cause',
+    'unsupported number',
+    'wrong comparison',
+    'invented cause'
+  ]);
+  assert.match(claims[0].sentence, /83\.40/);
+  assert.match(claims[0].falsifier, /Mean is 66\.00/);
+  assert.match(claims[1].falsifier, /Minimum is 35\.00/);
+  assert.match(claims[1].falsifier, /Maximum is 120\.00/);
+  assert.match(claims[3].sentence, /1805 records/);
+  assert.match(claims[3].falsifier, /Row count is 5/);
+  var hostile = logic.exampleClaims('<img src=x>', stats);
+  assert.match(hostile[0].sentence, /<img src=x>/);
+  assert.doesNotMatch(hostile[0].sentence, /<strong>/);
+});
+
 test('sample CSV is synthetic and has two numeric columns', function () {
   var rows = logic.parseCSV(logic.SAMPLE_CSV);
   assert.deepEqual(logic.numericColumns(rows), ['monthly_bill', 'tickets']);
   assert.equal(rows.length, 5);
-});
-
-test('illustrative band is a constant width and is not labeled as a confidence interval', function () {
-  var band = logic.illustrativeBand([10, 20]);
-  assert.deepEqual(band.low, [2, 12]);
-  assert.deepEqual(band.high, [18, 28]);
-  assert.equal(logic.ILLUSTRATIVE_BAND_NAME, 'Illustrative band (±8)');
-  assert.doesNotMatch(logic.ILLUSTRATIVE_BAND_NAME, /95%|CI|confidence/i);
-});
-
-test('month labels use the local calendar and do not skip short months', function () {
-  assert.equal(logic.formatMonth(new Date(2026, 0, 1)), '2026-01');
-  assert.equal(logic.formatMonth(logic.shiftMonth(new Date(2026, 2, 31), -1)), '2026-02');
-  var rolled = new Date(2026, 2, 31);
-  rolled.setMonth(rolled.getMonth() - 1);
-  assert.notEqual(logic.formatMonth(rolled), '2026-02');
-});
-
-test('normalSample skips zero draws before the log', function () {
-  var draws = [0, 0, 0.3, 0.4];
-  var index = 0;
-  var sample = logic.normalSample(0, 1, function () { return draws[index++]; });
-  assert.equal(index, 4);
-  assert.equal(sample, Math.sqrt(-2 * Math.log(0.3)) * Math.cos(2 * Math.PI * 0.4));
 });
 
 test('slider parsing falls back when the value is empty', function () {

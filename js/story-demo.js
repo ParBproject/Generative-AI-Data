@@ -4,6 +4,8 @@
   var summary = document.getElementById('summary');
   var chart = document.getElementById('chart');
   var select = document.getElementById('columnSelect');
+  var factcheckList = document.getElementById('factcheckList');
+  var factcheckPlaceholder = 'Load a numeric column. Each example is then checked against that column\'s minimum, mean, maximum, and row count.';
 
   function warningSuffix() {
     var warnings = dataset && dataset.warnings;
@@ -11,10 +13,33 @@
     return ' ' + warnings.join(' ');
   }
 
+  function resetFactCheck() {
+    if (factcheckList) factcheckList.textContent = factcheckPlaceholder;
+  }
+
+  function renderFactCheck(column, stats) {
+    if (!factcheckList) return;
+    factcheckList.replaceChildren();
+    logic.exampleClaims(column, stats).forEach(function (claim) {
+      var article = document.createElement('article');
+      article.className = 'claim';
+      var type = document.createElement('div');
+      type.className = 'etype';
+      type.textContent = 'Error type: ' + claim.type;
+      var sentence = document.createElement('p');
+      sentence.textContent = claim.sentence;
+      var falsifier = document.createElement('div');
+      falsifier.textContent = 'Column stat that falsifies it: ' + claim.falsifier;
+      article.append(type, sentence, falsifier);
+      factcheckList.appendChild(article);
+    });
+  }
+
   function clearView(message) {
     dataset = [];
     select.replaceChildren();
     summary.textContent = message;
+    resetFactCheck();
     if (globalThis.Plotly && chart.data) Plotly.purge(chart);
     chart.textContent = '';
   }
@@ -24,9 +49,11 @@
     var stats = logic.summarizeNumeric(values);
     if (!stats) {
       summary.textContent = 'That column has no numeric values.' + warningSuffix();
+      resetFactCheck();
       return;
     }
     summary.textContent = logic.summaryText(column, stats) + warningSuffix();
+    renderFactCheck(column, stats);
     if (!globalThis.Plotly) {
       chart.textContent = 'Chart library failed to load.';
       return;
