@@ -19,8 +19,8 @@ Four browser demos. The data is synthetic or illustrative. Sentiment runs Distil
 | Project | Business question | Demonstration |
 |---|---|---|
 | Retail sentiment | What are customers saying, and which themes matter most? | [Open demo](https://parbproject.github.io/Generative-AI-Data/retail_sentiment_demo.html) |
-| Fraud exploration | How does fraud prevalence change transaction patterns? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
-| Churn analysis | Which factors appear to increase customer churn risk? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
+| Fraud exploration | What does a synthetic cloud look like as the fraud share changes? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
+| Churn analysis | How does a hand-set logistic respond when tenure or charges change? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
 | Automated storytelling | What do the column minimum, mean, and maximum actually support? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
 
 ## Skills Demonstrated
@@ -41,13 +41,32 @@ Four browser demos. The data is synthetic or illustrative. Sentiment runs Distil
 ├── fraud_demo.html
 ├── churn_demo.html
 ├── automated_data_storytelling_demo.html
+├── js/
+├── test/
+├── docs/screenshots/
 └── images/
 ~~~
 
+`index.html` is the live homepage. It links to the four demos and does not draw a forecast, a confidence interval, or a classifier.
+
 ## Run Locally
 
-Clone the repository and open "index.html" in a browser. No build process or package installation is required.
+Clone the repository and open `index.html` in a browser. No build process or package installation is required to view the pages.
+
+The sentiment demo fetches its library and models on the first analysis. Serve the folder over HTTP if the browser blocks that fetch from a local file:
+
+~~~bash
+python3 -m http.server
+~~~
+
+## Tests
+
+~~~bash
+node --test
+~~~
+
+GitHub Actions checks out the repo with pinned actions, installs Node 22.14.0, runs `npm ci` from `package-lock.json`, and then `npm test` (the same `node --test` command). The check downloads the pinned Plotly and Transformers files and compares them with the integrity hashes in `js/cdn.js`.
 
 ## Data Note
 
-The examples are portfolio demonstrations and use synthetic or illustrative data. Any displayed performance figures should be interpreted as demo outputs rather than production results.
+The examples are portfolio demonstrations and use synthetic or illustrative data. The homepage does not draw a forecast, a confidence interval, or a classifier. The churn page uses a hand-set two-coefficient logistic. That figure is not a measured model result.

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generative AI Data Analyst – Portfolio</title>
-  <meta name="description" content="Four browser demos: in-browser DistilBERT sentiment, a two-feature churn sketch, column min/mean/max, and a synthetic fraud cloud." />
+  <meta name="description" content="Four browser demos: in-browser DistilBERT sentiment, a two-feature churn sketch, column min/mean/max with example-claim checks, and a synthetic fraud cloud." />
   <meta name="author" content="ParBproject" />
   <meta property="og:title" content="Generative AI Data Analyst – Portfolio" />
   <meta property="og:description" content="Four labeled browser demos on synthetic data. No forecast, confidence interval, or classifier is drawn on the homepage." />
@@ -34,7 +34,14 @@
       --radius: 16px;
     }
     * { box-sizing: border-box; }
+    html { color-scheme: dark; }
     html, body { height: 100%; }
+    .skip {
+      position: absolute; left: 12px; top: -48px; z-index: 100;
+      background: #5b35ff; color: #fff; padding: 8px 12px; border-radius: 8px;
+    }
+    .skip:focus { top: 12px; }
+    :focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
     body {
       margin: 0;
       background: radial-gradient(1200px 800px at 20% -10%, rgba(124,92,255,.12), transparent 60%),
@@ -54,7 +61,8 @@
       background: linear-gradient(180deg, rgba(11,16,32,.8), rgba(11,16,32,.4));
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
-    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 20px; }
+    .nav nav { display: flex; flex-wrap: wrap; }
     .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.5px; }
     .logo {
       width: 36px; height: 36px; border-radius: 12px; display:grid; place-items:center;
@@ -76,7 +84,7 @@
       color: var(--text); font-weight: 600; box-shadow: var(--shadow);
     }
     .btn:hover { border-color: rgba(124,92,255,.6); box-shadow: 0 10px 24px rgba(124,92,255,.25); }
-    .btn.primary { background: linear-gradient(180deg, var(--accent), #5b35ff); color: white; border: none; }
+    .btn.primary { background: linear-gradient(180deg, #5b35ff, #4318d6); color: white; border: none; }
 
     .hero-card {
       background: linear-gradient(180deg, rgba(124,92,255,.18), rgba(54,225,220,.08));
@@ -126,6 +134,7 @@
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
   <header class="nav" aria-label="Top Navigation">
     <div class="nav-inner">
       <div class="brand">
@@ -140,7 +149,7 @@
     </div>
   </header>
 
-  <main>
+  <main id="main">
     <!-- Hero -->
     <section class="hero" id="home">
       <div>
@@ -172,7 +181,7 @@
     <!-- Projects -->
     <section id="projects" aria-labelledby="projects-title">
       <h2 class="section-title" id="projects-title">Projects</h2>
-      <div class="muted">Hand-picked case studies with visuals, methods, and repos.</div>
+      <div class="muted">Four demos in this repository.</div>
       <div class="projects-grid" id="projectsGrid"></div>
     </section>
 
@@ -193,76 +202,6 @@
     <div>© <span id="year"></span> • ParBproject</div>
   </footer>
 
-  <script>
-    // ======= Demo labels =======
-    const kpiData = [
-      { label: 'Demos in this repo', value: () => '4' },
-      { label: 'Production models', value: () => '0' },
-      { label: 'Sentiment stack', value: () => 'In-browser' },
-      { label: 'Data', value: () => 'Synthetic' },
-    ];
-
-    // Projects (replace with your real links and descriptions)
-    const projects = [
-      {
-        title: 'AI-Driven Review Sentiment (Retail)',
-        blurb: 'DistilBERT sentiment, zero-shot topics, and a short summary. Runs in the browser.',
-        tags: ['Transformers', 'Plotly'],
-        repo: 'https://github.com/ParBproject/Generative-AI-Data',
-        live: 'retail_sentiment_demo.html'
-      },
-      {
-        title: 'Synthetic Data for Fraud Detection',
-        blurb: 'A slider that redraws a synthetic fraud cloud. Not a trained detector.',
-        tags: ['Synthetic', 'Plotly'],
-        repo: 'https://github.com/ParBproject/Generative-AI-Data',
-        live: 'fraud_demo.html'
-      },
-      {
-        title: 'Automated Data Storytelling',
-        blurb: 'Minimum, mean, and maximum beside a histogram. Example claims are checked against those stats. Not a language model.',
-        tags: ['CSV', 'Plotly'],
-        repo: 'https://github.com/ParBproject/Generative-AI-Data',
-        live: 'automated_data_storytelling_demo.html'
-      },
-      {
-        title: 'Churn Prediction Dashboard',
-        blurb: 'Two sliders and a hand-set logistic. Useful for explaining a coefficient, not a churn model.',
-        tags: ['What-if', 'Plotly'],
-        repo: 'https://github.com/ParBproject/Generative-AI-Data',
-        live: 'churn_demo.html'
-      }
-    ];
-
-    // Render KPIs
-    const kpisEl = document.getElementById('kpis');
-    kpiData.forEach(k => {
-      const el = document.createElement('div');
-      el.className = 'kpi';
-      el.innerHTML = `<div class="label">${k.label}</div><div class="value">${k.value()}</div>`;
-      kpisEl.appendChild(el);
-    });
-
-    // Render Projects
-    const grid = document.getElementById('projectsGrid');
-    projects.forEach(p => {
-      const card = document.createElement('article');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="thumb" role="img" aria-label="Project thumbnail"></div>
-        <div class="card-content">
-          <h3 style="margin:0 0 6px; font-size:18px;">${p.title}</h3>
-          <p class="muted" style="margin:0 0 10px;">${p.blurb}</p>
-          <div class="tags">${p.tags.map(t => `<span class='tag'>${t}</span>`).join('')}</div>
-          <div style="display:flex; gap:10px;">
-            <a class="btn" href="${p.repo}" target="_blank" rel="noopener">GitHub Repo ↗</a>
-            <a class="btn" href="${p.live}">Live Demo</a>
-          </div>
-        </div>`;
-      grid.appendChild(card);
-    });
-
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  <script src="js/portfolio-home.js"></script>
 </body>
 </html>
