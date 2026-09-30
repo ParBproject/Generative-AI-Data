@@ -120,30 +120,6 @@ test('sample CSV is synthetic and has two numeric columns', function () {
   assert.equal(rows.length, 5);
 });
 
-test('illustrative band is a constant width and is not labeled as a confidence interval', function () {
-  var band = logic.illustrativeBand([10, 20]);
-  assert.deepEqual(band.low, [2, 12]);
-  assert.deepEqual(band.high, [18, 28]);
-  assert.equal(logic.ILLUSTRATIVE_BAND_NAME, 'Illustrative band (±8)');
-  assert.doesNotMatch(logic.ILLUSTRATIVE_BAND_NAME, /95%|CI|confidence/i);
-});
-
-test('month labels use the local calendar and do not skip short months', function () {
-  assert.equal(logic.formatMonth(new Date(2026, 0, 1)), '2026-01');
-  assert.equal(logic.formatMonth(logic.shiftMonth(new Date(2026, 2, 31), -1)), '2026-02');
-  var rolled = new Date(2026, 2, 31);
-  rolled.setMonth(rolled.getMonth() - 1);
-  assert.notEqual(logic.formatMonth(rolled), '2026-02');
-});
-
-test('normalSample skips zero draws before the log', function () {
-  var draws = [0, 0, 0.3, 0.4];
-  var index = 0;
-  var sample = logic.normalSample(0, 1, function () { return draws[index++]; });
-  assert.equal(index, 4);
-  assert.equal(sample, Math.sqrt(-2 * Math.log(0.3)) * Math.cos(2 * Math.PI * 0.4));
-});
-
 test('slider parsing falls back when the value is empty', function () {
   assert.equal(logic.readSliderInt('12', 0), 12);
   assert.equal(logic.readSliderInt('', 7), 7);

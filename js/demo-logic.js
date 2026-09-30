@@ -13,8 +13,6 @@
     charges: 0.04
   });
 
-  var ILLUSTRATIVE_BAND_HALF_WIDTH = 8;
-  var ILLUSTRATIVE_BAND_NAME = 'Illustrative band (±8)';
   var FRAUD_TOTAL = 1000;
   var MAX_CSV_BYTES = 1000000;
   var MAX_REVIEW_CHARS = 2000;
@@ -313,33 +311,6 @@ function summarizeNumeric(values) {
     ];
   }
 
-  function illustrativeBand(values, halfWidth) {
-    var width = halfWidth == null ? ILLUSTRATIVE_BAND_HALF_WIDTH : halfWidth;
-    return {
-      low: values.map(function (value) { return value - width; }),
-      high: values.map(function (value) { return value + width; })
-    };
-  }
-
-  function formatMonth(date) {
-    var month = String(date.getMonth() + 1);
-    if (month.length < 2) month = '0' + month;
-    return date.getFullYear() + '-' + month;
-  }
-
-  function shiftMonth(date, monthDelta) {
-    return new Date(date.getFullYear(), date.getMonth() + monthDelta, 1);
-  }
-
-  function normalSample(mean, std, random) {
-    var next = random || Math.random;
-    var u = 0;
-    var v = 0;
-    while (u <= 0) u = next();
-    while (v <= 0) v = next();
-    return mean + std * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  }
-
   function readSliderInt(value, fallback) {
     var parsed = Number.parseInt(String(value), 10);
     return Number.isInteger(parsed) ? parsed : fallback;
@@ -347,8 +318,6 @@ function summarizeNumeric(values) {
 
   return {
     COEFFICIENTS: COEFFICIENTS,
-    ILLUSTRATIVE_BAND_HALF_WIDTH: ILLUSTRATIVE_BAND_HALF_WIDTH,
-    ILLUSTRATIVE_BAND_NAME: ILLUSTRATIVE_BAND_NAME,
     FRAUD_TOTAL: FRAUD_TOTAL,
     MAX_CSV_BYTES: MAX_CSV_BYTES,
     MAX_REVIEW_CHARS: MAX_REVIEW_CHARS,
@@ -373,10 +342,6 @@ function summarizeNumeric(values) {
     summarizeNumeric: summarizeNumeric,
     summaryText: summaryText,
     exampleClaims: exampleClaims,
-    illustrativeBand: illustrativeBand,
-    formatMonth: formatMonth,
-    shiftMonth: shiftMonth,
-    normalSample: normalSample,
     readSliderInt: readSliderInt
   };
 });
