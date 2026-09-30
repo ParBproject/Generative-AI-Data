@@ -40,6 +40,7 @@ test('homepage charts are lazy, local-month labeled, and not called a confidence
   assert.doesNotMatch(home, /toISOString/);
   assert.doesNotMatch(home, /95% CI/);
   assert.doesNotMatch(home, /AI Forecast/);
+  assert.doesNotMatch(home, /scattergl/);
   assert.doesNotMatch(read('index.html'), /cdn\.plot\.ly/);
 });
 
@@ -68,6 +69,11 @@ test('transformers entry is pinned and models load on demand', function () {
   assert.match(demo, /analyzeBtn\.addEventListener\('click'/);
   assert.match(demo, /topk:\s*2/);
   assert.match(demo, /allowLocalModels = false/);
+  assert.match(demo, /zeroShotArguments/);
+  assert.match(demo, /runStages/);
+  assert.match(page, /separate relevance scores/);
+  assert.match(page, /2,000 characters/);
+  assert.doesNotMatch(demo, /candidate_labels/);
   assert.doesNotMatch(demo, /\binit\(\)/);
   const handler = demo.split("addEventListener('click'")[1];
   assert.match(handler, /loadModels\(\)/);
@@ -97,6 +103,9 @@ test('story demo renders text, not HTML, and does not depend on a third-party CS
   assert.match(demo, /SAMPLE_CSV/);
   assert.match(demo, /MAX_CSV_BYTES/);
   assert.match(demo, /summaryText/);
+  assert.match(demo, /input\.value = ''/);
+  assert.match(demo, /clearView\('Could not parse that CSV\.'\)/);
+  assert.match(demo, /clearView\('This demo only reads CSV files up to 1 MB\.'\)/);
 });
 
 test('the starter template does not publish fabricated metrics or placeholder endpoints', function () {
@@ -109,9 +118,28 @@ test('the starter template does not publish fabricated metrics or placeholder en
   assert.doesNotMatch(starter, /95% CI|yourusername|your-form-id|Avg Uplift|Stakeholder NPS|resume\.pdf|LangChain|Power BI|XGBoost|Formspree|toISOString/);
 });
 
+test('link previews do not call the drawings AI-powered storytelling', function () {
+  assert.doesNotMatch(read('index.html'), /AI-powered data storytelling/);
+  assert.doesNotMatch(read('generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html'), /AI-powered data storytelling/);
+  assert.match(read('index.html'), /Homepage charts are drawings, not model evaluations/);
+});
+
+test('local script sources point at files in the repo', function () {
+  livePages.concat(['generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html']).forEach(function (page) {
+    const html = read(page);
+    const sources = html.match(/<script src="([^"]+)"/g) || [];
+    sources.forEach(function (tag) {
+      const src = tag.slice('<script src="'.length, -1);
+      if (/^https?:/i.test(src)) return;
+      assert.equal(fs.existsSync(path.join(root, src)), true, page + ' -> ' + src);
+    });
+  });
+});
+
 test('demo sources do not contain credential assignments', function () {
   const files = fs.readdirSync(path.join(root, 'js')).map(function (name) { return 'js/' + name; })
-    .concat(livePages);
+    .concat(livePages)
+    .concat(['generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html']);
   const secret = /sk_live_[0-9A-Za-z]+|AKIA[0-9A-Z]{16}|api[_-]?key\s*[:=]\s*['"][^'"]+['"]/i;
   files.forEach(function (file) {
     assert.doesNotMatch(read(file), secret, file);

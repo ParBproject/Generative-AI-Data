@@ -219,8 +219,8 @@
       else { xs0.push(x); ys0.push(y); }
     }
     Plotly.newPlot('chartScatter', [
-      { x: xs0, y: ys0, mode: 'markers', name: 'Class 0', type: 'scattergl' },
-      { x: xs1, y: ys1, mode: 'markers', name: 'Class 1', type: 'scattergl' }
+      { x: xs0, y: ys0, mode: 'markers', name: 'Class 0', type: 'scatter' },
+      { x: xs1, y: ys1, mode: 'markers', name: 'Class 1', type: 'scatter' }
     ], chartLayout({
       xaxis: { title: 'Feature A (drawn)', gridcolor: 'rgba(255,255,255,.08)' },
       yaxis: { title: 'Feature B (drawn)', gridcolor: 'rgba(255,255,255,.08)' }

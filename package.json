@@ -1,6 +1,9 @@
 {
   "name": "generative-ai-data",
   "private": true,
+  "engines": {
+    "node": ">=22.14.0"
+  },
   "scripts": {
     "test": "node --test"
   }

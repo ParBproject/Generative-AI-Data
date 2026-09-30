@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generative AI Data Analyst – Portfolio</title>
-  <meta name="description" content="Portfolio of a Generative AI Data Analyst: projects, interactive visualizations, dashboards, and contact." />
+  <meta name="description" content="Unused starter template. The live portfolio is index.html. Numbers on this page are drawings." />
   <meta name="author" content="ParBproject" />
   <meta property="og:title" content="Generative AI Data Analyst – Portfolio" />
-  <meta property="og:description" content="Projects, dashboards, and AI-powered data storytelling." />
+  <meta property="og:description" content="Unused starter template. The live portfolio is index.html. Numbers on this page are drawings." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://dummyimage.com/1200x630/0b1020/e0e7ff&text=AI+Data+Analyst+Portfolio" />
   <meta name="theme-color" content="#0b1020" />
@@ -384,8 +384,8 @@
         const y = c ? x * .6 + normal(10, 8) : x * .3 + normal(18, 8);
         xs.push(x); ys.push(y); cls.push(c);
       }
-      const t0 = { x: xs.filter((_,i)=>cls[i]===0), y: ys.filter((_,i)=>cls[i]===0), mode: 'markers', name: 'Class 0', type: 'scattergl' };
-      const t1 = { x: xs.filter((_,i)=>cls[i]===1), y: ys.filter((_,i)=>cls[i]===1), mode: 'markers', name: 'Class 1', type: 'scattergl' };
+      const t0 = { x: xs.filter((_,i)=>cls[i]===0), y: ys.filter((_,i)=>cls[i]===0), mode: 'markers', name: 'Class 0', type: 'scatter' };
+      const t1 = { x: xs.filter((_,i)=>cls[i]===1), y: ys.filter((_,i)=>cls[i]===1), mode: 'markers', name: 'Class 1', type: 'scatter' };
       Plotly.newPlot('chartScatter', [t0, t1], {
         margin: { t: 10, r: 10, b: 40, l: 50 },
         paper_bgcolor: 'transparent', plot_bgcolor: 'transparent', font: { color: '#e6e9f5' },

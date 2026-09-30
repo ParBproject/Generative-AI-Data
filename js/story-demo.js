@@ -5,14 +5,28 @@
   var chart = document.getElementById('chart');
   var select = document.getElementById('columnSelect');
 
+  function warningSuffix() {
+    var warnings = dataset && dataset.warnings;
+    if (!warnings || !warnings.length) return '';
+    return ' ' + warnings.join(' ');
+  }
+
+  function clearView(message) {
+    dataset = [];
+    select.replaceChildren();
+    summary.textContent = message;
+    if (globalThis.Plotly && chart.data) Plotly.purge(chart);
+    chart.textContent = '';
+  }
+
   function showColumn(column) {
     var values = dataset.map(function (row) { return row[column]; });
     var stats = logic.summarizeNumeric(values);
     if (!stats) {
-      summary.textContent = 'That column has no numeric values.';
+      summary.textContent = 'That column has no numeric values.' + warningSuffix();
       return;
     }
-    summary.textContent = logic.summaryText(column, stats);
+    summary.textContent = logic.summaryText(column, stats) + warningSuffix();
     if (!globalThis.Plotly) {
       chart.textContent = 'Chart library failed to load.';
       return;
@@ -35,9 +49,9 @@
     select.replaceChildren();
     var columns = logic.numericColumns(rows);
     if (!columns.length) {
-      summary.textContent = rows.length ? 'No numeric column found.' : 'No data rows found.';
-      if (globalThis.Plotly && chart.data) Plotly.purge(chart);
-      chart.textContent = '';
+      var emptyMessage = rows.length ? 'No numeric column found.' : 'No data rows found.';
+      var warnings = rows.warnings;
+      clearView(warnings && warnings.length ? emptyMessage + ' ' + warnings.join(' ') : emptyMessage);
       return;
     }
     columns.forEach(function (column) {
@@ -54,22 +68,24 @@
   });
 
   document.getElementById('fileInput').addEventListener('change', function (event) {
-    var file = event.target.files && event.target.files[0];
+    var input = event.target;
+    var file = input.files && input.files[0];
+    input.value = '';
     if (!file) return;
     if (file.size > logic.MAX_CSV_BYTES) {
-      summary.textContent = 'This demo only reads CSV files up to 1 MB.';
+      clearView('This demo only reads CSV files up to 1 MB.');
       return;
     }
     var reader = new FileReader();
     reader.onerror = function () {
-      summary.textContent = 'Could not read that file.';
+      clearView('Could not read that file.');
     };
     reader.onload = function () {
       try {
         render(logic.parseCSV(String(reader.result)));
       } catch (error) {
         console.error(error);
-        summary.textContent = 'Could not parse that CSV.';
+        clearView('Could not parse that CSV.');
       }
     };
     reader.readAsText(file);
@@ -80,7 +96,7 @@
       render(logic.parseCSV(logic.SAMPLE_CSV));
     } catch (error) {
       console.error(error);
-      summary.textContent = 'Could not load the sample.';
+      clearView('Could not load the sample.');
     }
   });
 })();

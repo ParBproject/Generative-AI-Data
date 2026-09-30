@@ -45,6 +45,11 @@
     return modelsPromise;
   }
 
+  function clearChart(el) {
+    if (globalThis.Plotly && typeof Plotly.purge === 'function' && el && el.data) Plotly.purge(el);
+    if (el) el.textContent = '';
+  }
+
   function plotSentiment(scores) {
     return globalThis.loadPlotly().then(function () {
       Plotly.newPlot(chartEl, [{
@@ -60,65 +65,107 @@
     });
   }
 
+  function plotTopics(topicOut) {
+    var chartData = logic.topicChartData(topicOut);
+    if (!chartData) {
+      clearChart(topicEl);
+      topicEl.textContent = 'The topic model returned labels this page does not recognize.';
+      return;
+    }
+    return globalThis.loadPlotly().then(function () {
+      Plotly.newPlot(topicEl, [{
+        x: chartData.labels,
+        y: chartData.scores,
+        type: 'bar',
+        marker: { color: '#1d4ed8' }
+      }], {
+        yaxis: { range: [0, 1], title: 'Relevance' },
+        margin: { t: 40 },
+        title: 'Zero-shot topic scores'
+      }, { responsive: true, displayModeBar: false });
+    }).catch(function (error) {
+      console.error(error);
+      clearChart(topicEl);
+      topicEl.textContent = 'Chart library failed to load.';
+    });
+  }
+
   analyzeBtn.addEventListener('click', function () {
     var text = reviewEl.value.trim();
     if (!text) {
       setStatus('Enter a review first.');
       return;
     }
+    var clipped = logic.clipReview(text);
+    function withClip(message) {
+      if (!clipped.truncated) return message;
+      return message + ' Only the first ' + logic.MAX_REVIEW_CHARS + ' characters were analyzed.';
+    }
     analyzeBtn.disabled = true;
     analyzeBtn.setAttribute('aria-busy', 'true');
-    setStatus('Analyzing…');
+    clearChart(chartEl);
+    clearChart(topicEl);
+    summaryEl.textContent = '';
+    setStatus(withClip('Analyzing…'));
     loadModels().then(function (models) {
-      // transformers.js 2.11.0 reads `topk`. A later major version renamed it.
-      return models.sentiment(text, { topk: 2 }).then(function (sentimentOut) {
-        var scores = logic.mapSentimentScores(sentimentOut);
-        var verdict = logic.sentimentVerdict(scores);
-        if (!verdict) {
-          setStatus('The sentiment model returned labels this page does not recognize.');
-          chartEl.textContent = '';
-          return models;
+      var topicArgs = logic.zeroShotArguments(topicLabels);
+      return logic.runStages([
+        {
+          task: function () {
+            // transformers.js 2.11.0 reads `topk`. A later major version renamed it.
+            return models.sentiment(clipped.text, { topk: 2 }).then(function (sentimentOut) {
+              var scores = logic.mapSentimentScores(sentimentOut);
+              var verdict = logic.sentimentVerdict(scores);
+              if (!verdict) {
+                setStatus(withClip('The sentiment model returned labels this page does not recognize.'));
+                clearChart(chartEl);
+                return;
+              }
+              var confidence = Math.max(scores.positive, scores.negative) * 100;
+              if (verdict === 'tie') {
+                setStatus(withClip('Tie (positive and negative confidence both ' + confidence.toFixed(1) + '%).'));
+              } else {
+                var word = verdict === 'positive' ? 'Positive' : 'Negative';
+                setStatus(withClip(word + ' (confidence ' + confidence.toFixed(1) + '%).'));
+              }
+              return plotSentiment(scores).catch(function (error) {
+                console.error(error);
+                clearChart(chartEl);
+                chartEl.textContent = 'Chart library failed to load.';
+              });
+            });
+          },
+          onError: function (error) {
+            console.error(error);
+            clearChart(chartEl);
+            setStatus(withClip('Sentiment failed. Topics and the summary may still be available.'));
+          }
+        },
+        {
+          task: function () {
+            return models.topic(clipped.text, topicArgs[0], topicArgs[1]).then(plotTopics);
+          },
+          onError: function (error) {
+            console.error(error);
+            clearChart(topicEl);
+            topicEl.textContent = 'Topic model failed. The sentiment result above is still usable.';
+          }
+        },
+        {
+          task: function () {
+            return models.summary(clipped.text, { max_new_tokens: 60 }).then(function (summaryOut) {
+              var written = summaryOut && summaryOut[0] && summaryOut[0].summary_text
+                ? String(summaryOut[0].summary_text).trim()
+                : '';
+              summaryEl.textContent = written || 'The summary model returned no text.';
+            });
+          },
+          onError: function (error) {
+            console.error(error);
+            summaryEl.textContent = 'Summary failed. Short reviews often cannot be summarized by this model. The sentiment result above is still usable.';
+          }
         }
-        var confidence = Math.max(scores.positive, scores.negative) * 100;
-        if (verdict === 'tie') {
-          setStatus('Tie (positive and negative confidence both ' + confidence.toFixed(1) + '%).');
-        } else {
-          var word = verdict === 'positive' ? 'Positive' : 'Negative';
-          setStatus(word + ' (confidence ' + confidence.toFixed(1) + '%).');
-        }
-        return plotSentiment(scores).catch(function (error) {
-          console.error(error);
-          chartEl.textContent = 'Chart library failed to load.';
-        }).then(function () { return models; });
-      }).then(function (models) {
-        return models.topic(text, { candidate_labels: topicLabels }).then(function (topicOut) {
-          return globalThis.loadPlotly().then(function () {
-            Plotly.newPlot(topicEl, [{
-              x: topicOut.labels,
-              y: topicOut.scores,
-              type: 'bar',
-              marker: { color: '#1d4ed8' }
-            }], {
-              yaxis: { range: [0, 1], title: 'Relevance' },
-              margin: { t: 40 },
-              title: 'Zero-shot topic scores'
-            }, { responsive: true, displayModeBar: false });
-          });
-        }).catch(function (error) {
-          console.error(error);
-          topicEl.textContent = 'Topic model failed. The sentiment result above is still usable.';
-        }).then(function () { return models; });
-      }).then(function (models) {
-        return models.summary(text, { max_new_tokens: 60 }).then(function (summaryOut) {
-          var written = summaryOut && summaryOut[0] && summaryOut[0].summary_text
-            ? String(summaryOut[0].summary_text).trim()
-            : '';
-          summaryEl.textContent = written || 'The summary model returned no text.';
-        }).catch(function (error) {
-          console.error(error);
-          summaryEl.textContent = 'Summary failed. Short reviews often cannot be summarized by this model. The sentiment result above is still usable.';
-        });
-      });
+      ]);
     }).catch(function (error) {
       console.error(error);
       setStatus('The models could not be loaded. Check the network connection and try again.');
