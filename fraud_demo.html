@@ -2,50 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Synthetic Fraud Data Demo</title>
-  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Synthetic fraud scatter</title>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" integrity="sha384-Hl48Kq2HifOWdXEjMsKo6qxqvRLTYqIGbvlENBmkHAxZKIGCXv43H6W1jA671RzC" crossorigin="anonymous"></script>
   <style>
-    body {font-family: Arial, sans-serif; margin:40px; background:#f5f6fa;}
-    #chart {width:100%;max-width:700px;height:450px;margin-top:20px;}
-    label {font-weight:bold;}
+    html { color-scheme: light; }
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f5f6fa; line-height: 1.5; }
+    main { max-width: 760px; }
+    #chart { width: 100%; max-width: 700px; height: 450px; margin-top: 20px; }
+    label { font-weight: bold; }
+    a { color: #1d4ed8; }
+    :focus-visible { outline: 3px solid #1d4ed8; outline-offset: 2px; }
   </style>
 </head>
 <body>
-  <h1>Synthetic Fraud Detection Demo</h1>
-    <img src="images/fraud_detection.svg" alt="Synthetic Data for Fraud Detection" style="max-width:100%;height:auto;">
-  <p>Adjust the slider to change the percentage of fraudulent transactions in the synthetic dataset.</p>
-  <label for="rate">Fraud percentage: <span id="lblRate">5</span>%</label>
-  <input type="range" id="rate" min="1" max="20" value="5" />
-  <div id="chart"></div>
-  <script>
-    function generateData(fraudPct) {
-      const total = 1000;
-      const fraudCount = Math.round(total * fraudPct / 100);
-      const legitCount = total - fraudCount;
-      const legitX = [], legitY = [], fraudX = [], fraudY = [];
-      for (let i = 0; i < legitCount; i++) {
-        legitX.push(Math.random() * 100);
-        legitY.push(Math.random() * 100);
-      }
-      for (let i = 0; i < fraudCount; i++) {
-        fraudX.push(70 + Math.random() * 30); // higher amounts
-        fraudY.push(70 + Math.random() * 30); // later times
-      }
-      const traceLegit = {x: legitX, y: legitY, mode:'markers', name:'Legit', marker:{color:'rgba(0,123,255,0.7)'}};
-      const traceFraud = {x: fraudX, y: fraudY, mode:'markers', name:'Fraud', marker:{color:'rgba(220,53,69,0.8)'}};
-      Plotly.newPlot('chart', [traceLegit, traceFraud], {
-        xaxis:{title:'Transaction Amount'},
-        yaxis:{title:'Transaction Time'},
-        margin:{t:30}
-      }, {responsive:true});
-    }
-    const slider = document.getElementById('rate');
-    const label = document.getElementById('lblRate');
-    slider.addEventListener('input', () => {
-      label.textContent = slider.value;
-      generateData(parseInt(slider.value));
-    });
-    generateData(parseInt(slider.value));
-  </script>
+  <main>
+    <p><a href="index.html">Back to portfolio</a></p>
+    <h1>Synthetic fraud scatter</h1>
+    <img src="images/fraud_detection.svg" alt="Illustration of a warning mark beside a chart" style="max-width:100%;height:auto;">
+    <p id="disclaimer">These points are synthetic. Fraud points are placed in the 70–100 box on both axes by the generator. This page is not a fraud detector and it does not use real transactions.</p>
+    <label for="rate">Fraud share: <span id="lblRate">5</span>%</label>
+    <input type="range" id="rate" min="1" max="20" value="5">
+    <p id="counts" aria-live="polite"></p>
+    <div id="chart" role="img" aria-label="Synthetic scatter of other points and generator-placed fraud points"></div>
+  </main>
+  <script src="js/demo-logic.js"></script>
+  <script src="js/fraud-demo.js"></script>
 </body>
 </html>
