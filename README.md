@@ -2,7 +2,7 @@
 
 ## For an AI data analyst application
 
-**Show this after the stroke casebook, not instead of it.** The sentiment page actually runs a transformer in the browser. The churn page is a two-coefficient sketch. The story page writes min, mean, and max next to a histogram. Say that out loud. Do not claim LangChain, Power BI, Tableau, or a production uplift.
+**Show this after the stroke casebook, not instead of it.** The sentiment page runs DistilBERT in the browser. The churn page is a two-feature logistic sketch. The story page writes minimum, mean, and maximum next to a histogram, then checks example claims against those stats. The fraud page draws a synthetic cloud. Say that out loud. Do not claim LangChain, Power BI, Tableau, dbt, or a production uplift.
 
 <p align="center"><img src="docs/screenshots/portfolio_home.png" alt="Generative AI demo index with honest labels" width="100%"></p>
 <p align="center"><img src="docs/screenshots/sentiment_demo.png" alt="Retail sentiment demo" width="100%"></p>
@@ -12,7 +12,7 @@
 [![HTML](https://img.shields.io/badge/HTML5-Interactive_Demos-E34F26?logo=html5&logoColor=white)](https://parbproject.github.io/Generative-AI-Data/)
 [![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-222?logo=github)](https://parbproject.github.io/Generative-AI-Data/)
 
-A collection of browser-based analytics demonstrations that turn data into clear, interactive stories. The portfolio explores customer-review text, a synthetic fraud scatter, a churn what-if, and a short column summary.
+Four browser demos. The data is synthetic or illustrative. Sentiment runs DistilBERT in the browser. Churn is a two-feature logistic sketch. Storytelling prints a column's minimum, mean, and maximum beside a histogram, then checks example claims against those stats. Fraud draws a synthetic cloud.
 
 ## Portfolio
 
@@ -21,25 +21,16 @@ A collection of browser-based analytics demonstrations that turn data into clear
 | Retail sentiment | What are customers saying, and which themes matter most? | [Open demo](https://parbproject.github.io/Generative-AI-Data/retail_sentiment_demo.html) |
 | Fraud exploration | What does a synthetic cloud look like as the fraud share changes? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
 | Churn analysis | How does a hand-set logistic respond when tenure or charges change? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
-| Automated storytelling | What are the mean, minimum, and maximum of one numeric column? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
-
-## Preview
-
-<p align="center">
-  <img src="1.png" alt="Analytics interface design" width="720">
-</p>
-
-<p align="center">
-  <img src="2.png" alt="Chart evaluation interface" width="720">
-</p>
+| Automated storytelling | What do the column minimum, mean, and maximum actually support? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
 
 ## Skills Demonstrated
 
-- Translating business questions into focused analytics experiences
-- Data storytelling, dashboard design, and visual hierarchy
-- Generative-AI-assisted summaries and explanatory content
-- Sentiment, fraud, and churn use-case design
-- Static web deployment with GitHub Pages
+- Four demos on synthetic or illustrative data
+- In-browser DistilBERT sentiment
+- Storytelling as column minimum, mean, and maximum, with example claims checked against those stats
+- Churn as a two-feature logistic sketch
+- Fraud as a synthetic point cloud
+- Static HTML on GitHub Pages
 
 ## Repository Structure
 
@@ -50,14 +41,13 @@ A collection of browser-based analytics demonstrations that turn data into clear
 ├── fraud_demo.html
 ├── churn_demo.html
 ├── automated_data_storytelling_demo.html
-├── generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html
 ├── js/
 ├── test/
 ├── docs/screenshots/
 └── images/
 ~~~
 
-`index.html` is the live homepage. `generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html` is an older starter kept so that path still resolves. It links back to the homepage.
+`index.html` is the live homepage. It links to the four demos and does not draw a forecast, a confidence interval, or a classifier.
 
 ## Run Locally
 
@@ -79,4 +69,4 @@ GitHub Actions checks out the repo with pinned actions, installs Node 22.14.0, r
 
 ## Data Note
 
-The examples are portfolio demonstrations and use synthetic or illustrative data. The homepage band is a constant plus-or-minus 8 drawing. The churn page uses a hand-set two-coefficient logistic. Neither figure is a measured model result.
+The examples are portfolio demonstrations and use synthetic or illustrative data. The homepage does not draw a forecast, a confidence interval, or a classifier. The churn page uses a hand-set two-coefficient logistic. That figure is not a measured model result.

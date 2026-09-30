@@ -13,8 +13,6 @@
     charges: 0.04
   });
 
-  var ILLUSTRATIVE_BAND_HALF_WIDTH = 8;
-  var ILLUSTRATIVE_BAND_NAME = 'Illustrative band (±8)';
   var FRAUD_TOTAL = 1000;
   var MAX_CSV_BYTES = 1000000;
   var MAX_REVIEW_CHARS = 2000;
@@ -273,31 +271,44 @@ function summarizeNumeric(values) {
       ' based on ' + stats.count + ' records.';
   }
 
-  function illustrativeBand(values, halfWidth) {
-    var width = halfWidth == null ? ILLUSTRATIVE_BAND_HALF_WIDTH : halfWidth;
-    return {
-      low: values.map(function (value) { return value - width; }),
-      high: values.map(function (value) { return value + width; })
-    };
-  }
-
-  function formatMonth(date) {
-    var month = String(date.getMonth() + 1);
-    if (month.length < 2) month = '0' + month;
-    return date.getFullYear() + '-' + month;
-  }
-
-  function shiftMonth(date, monthDelta) {
-    return new Date(date.getFullYear(), date.getMonth() + monthDelta, 1);
-  }
-
-  function normalSample(mean, std, random) {
-    var next = random || Math.random;
-    var u = 0;
-    var v = 0;
-    while (u <= 0) u = next();
-    while (v <= 0) v = next();
-    return mean + std * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  function exampleClaims(column, stats) {
+    var name = String(column);
+    var mean = stats.mean.toFixed(2);
+    var min = stats.min.toFixed(2);
+    var max = stats.max.toFixed(2);
+    var count = stats.count;
+    return [
+      {
+        type: 'unsupported number',
+        sentence: 'The average of ' + name + ' is ' + (stats.mean + 17.4).toFixed(2) + '.',
+        falsifier: 'Mean is ' + mean + '.'
+      },
+      {
+        type: 'wrong comparison',
+        sentence: 'The minimum ' + name + ' is higher than the maximum.',
+        falsifier: 'Minimum is ' + min + '. Maximum is ' + max + '.'
+      },
+      {
+        type: 'invented cause',
+        sentence: name + ' reaches ' + max + ' because a weekend promotion doubled demand.',
+        falsifier: 'Maximum is ' + max + '. The column stats are minimum, mean, maximum, and row count. They do not record a cause.'
+      },
+      {
+        type: 'unsupported number',
+        sentence: 'This summary is based on ' + (count + 1800) + ' records.',
+        falsifier: 'Row count is ' + count + '.'
+      },
+      {
+        type: 'wrong comparison',
+        sentence: 'The average of ' + name + ' sits above the maximum.',
+        falsifier: 'Mean is ' + mean + '. Maximum is ' + max + '.'
+      },
+      {
+        type: 'invented cause',
+        sentence: 'The range of ' + name + ' widened after a pricing change.',
+        falsifier: 'Minimum is ' + min + ' and maximum is ' + max + ' (mean ' + mean + ', ' + count + ' rows). Those figures are one snapshot. They do not show a change over time or a price cause.'
+      }
+    ];
   }
 
   function readSliderInt(value, fallback) {
@@ -307,8 +318,6 @@ function summarizeNumeric(values) {
 
   return {
     COEFFICIENTS: COEFFICIENTS,
-    ILLUSTRATIVE_BAND_HALF_WIDTH: ILLUSTRATIVE_BAND_HALF_WIDTH,
-    ILLUSTRATIVE_BAND_NAME: ILLUSTRATIVE_BAND_NAME,
     FRAUD_TOTAL: FRAUD_TOTAL,
     MAX_CSV_BYTES: MAX_CSV_BYTES,
     MAX_REVIEW_CHARS: MAX_REVIEW_CHARS,
@@ -332,10 +341,7 @@ function summarizeNumeric(values) {
     numericColumns: numericColumns,
     summarizeNumeric: summarizeNumeric,
     summaryText: summaryText,
-    illustrativeBand: illustrativeBand,
-    formatMonth: formatMonth,
-    shiftMonth: shiftMonth,
-    normalSample: normalSample,
+    exampleClaims: exampleClaims,
     readSliderInt: readSliderInt
   };
 });

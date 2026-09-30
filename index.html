@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Generative AI Data Analyst – Portfolio</title>
-  <meta name="description" content="Four browser demos: in-browser review sentiment, a hand-set churn what-if, a column summary, and a synthetic fraud scatter." />
+  <meta name="description" content="Four browser demos: in-browser DistilBERT sentiment, a two-feature churn sketch, column min/mean/max with example-claim checks, and a synthetic fraud cloud." />
   <meta name="author" content="ParBproject" />
   <meta property="og:title" content="Generative AI Data Analyst – Portfolio" />
-  <meta property="og:description" content="Four browser demos on synthetic or illustrative data. Homepage charts are drawings, not model evaluations." />
+  <meta property="og:description" content="Four labeled browser demos on synthetic data. No forecast, confidence interval, or classifier is drawn on the homepage." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://dummyimage.com/1200x630/0b1020/e0e7ff&text=AI+Data+Analyst+Portfolio" />
   <meta name="theme-color" content="#0b1020" />
@@ -16,11 +16,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
-  <!-- Plotly loads when the chart section is near the viewport. -->
-  <script src="js/cdn.js"></script>
-  <script src="js/demo-logic.js"></script>
-  <script src="js/load-plotly.js"></script>
 
   <style>
     :root {
@@ -123,11 +118,6 @@
     .tag { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); color: var(--muted); }
     .card a { align-self:flex-start; margin-top: auto; }
 
-    /* Viz */
-    .viz-grid { display:grid; grid-template-columns: 1fr; gap: 14px; }
-    .panel { background: linear-gradient(180deg, var(--panel), var(--panel-2)); border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px; }
-    .panel h3 { margin: 8px 8px 12px; font-size: 18px; }
-
     .kpis { display:grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; }
     .kpi { padding: 12px; border-radius: 12px; background: #0e1430; border: 1px solid rgba(255,255,255,.06); }
     .kpi .label { color: var(--muted); font-size: 12px; }
@@ -153,7 +143,6 @@
       </div>
       <nav>
         <a class="link" href="#projects">Projects</a>
-        <a class="link" href="#visualizations">Visualizations</a>
         <a class="link" href="#about">About</a>
         <a class="link" href="#contact">Contact</a>
       </nav>
@@ -168,7 +157,6 @@
         <p class="subtitle">Four browser demos for an AI data analyst portfolio: review text, a churn what-if, a narrative next to a chart, and a synthetic fraud sketch. The numbers on this page are labeled as demos.</p>
         <div class="cta">
           <a class="btn primary" href="#projects">View Projects</a>
-          <a class="btn" href="#visualizations">See Visualizations</a>
           <a class="btn" href="https://github.com/ParBproject/Generative-AI-Data" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
       </div>
@@ -197,35 +185,10 @@
       <div class="projects-grid" id="projectsGrid"></div>
     </section>
 
-    <!-- Visualizations -->
-    <section id="visualizations" aria-labelledby="viz-title">
-      <h2 class="section-title" id="viz-title">Interactive Visualizations</h2>
-      <p class="muted">These four charts are random or hand-entered drawings. They are not model evaluations.</p>
-      <p id="vizStatus" class="muted" role="status" aria-live="polite">Charts load when this section is on screen.</p>
-      <div class="viz-grid">
-        <div class="panel">
-          <h3>Illustrative time series</h3>
-          <div id="chartTimeseries" style="height:340px;" role="img" aria-label="Random walk with a constant plus or minus 8 band"></div>
-        </div>
-        <div class="panel">
-          <h3>Two drawn distributions</h3>
-          <div id="chartHistogram" style="height:320px;" role="img" aria-label="Two histograms of random draws"></div>
-        </div>
-        <div class="panel">
-          <h3>Illustrative confusion matrix</h3>
-          <div id="chartHeatmap" style="height:320px;" role="img" aria-label="Hand-entered confusion matrix, not a measured model"></div>
-        </div>
-        <div class="panel">
-          <h3>Drawn feature relationship</h3>
-          <div id="chartScatter" style="height:340px;" role="img" aria-label="Scatter plot of two random classes"></div>
-        </div>
-      </div>
-    </section>
-
     <!-- About -->
     <section id="about" aria-labelledby="about-title">
       <h2 class="section-title" id="about-title">About Me</h2>
-      <p class="muted">These pages are interview demos, not production models. The sentiment page loads DistilBERT-class models in the browser. The churn page is a two-feature logistic sketch. The storytelling page summarizes a column. The fraud page draws a synthetic cloud. Sibling repos — Bayline fulfillment and the stroke casebook — are where the analyst work lives.</p>
+      <p class="muted">These pages are interview demos, not production models. The sentiment page loads DistilBERT in the browser. The churn page is a two-feature logistic sketch. The storytelling page prints a column's minimum, mean, and maximum, then checks example claims against those stats. The fraud page draws a synthetic cloud. Sibling repos — Bayline fulfillment and the stroke casebook — are where the analyst work lives.</p>
     </section>
 
     <!-- Contact -->

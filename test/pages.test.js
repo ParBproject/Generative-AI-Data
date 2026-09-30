@@ -28,20 +28,17 @@ test('live page paths stay in place and link to each other', function () {
       assert.match(projects, new RegExp(page));
     });
   assert.match(home, /Skip to content/);
-  assert.match(home, /These four charts are random or hand-entered drawings\. They are not model evaluations\./);
+  assert.doesNotMatch(home, /id="visualizations"|chartHeatmap|chartTimeseries|chartHistogram|chartScatter/);
   assert.match(read('js/portfolio-home.js'), /live: 'retail_sentiment_demo.html'/);
 });
 
-test('homepage charts are lazy, local-month labeled, and not called a confidence interval', function () {
-  const home = read('js/portfolio-home.js');
-  assert.match(home, /IntersectionObserver/);
-  assert.match(home, /shiftMonth/);
-  assert.match(home, /ILLUSTRATIVE_BAND_NAME/);
-  assert.doesNotMatch(home, /toISOString/);
-  assert.doesNotMatch(home, /95% CI/);
-  assert.doesNotMatch(home, /AI Forecast/);
-  assert.doesNotMatch(home, /scattergl/);
-  assert.doesNotMatch(read('index.html'), /cdn\.plot\.ly/);
+test('homepage does not draw the fake charts or a Predicted/Actual heatmap', function () {
+  const home = read('index.html');
+  const script = read('js/portfolio-home.js');
+  assert.match(home, /No forecast, confidence interval, or classifier is drawn on the homepage/);
+  assert.doesNotMatch(home, /95% CI|AI Forecast|cdn\.plot\.ly|js\/load-plotly\.js/);
+  assert.doesNotMatch(script, /Plotly\.|newPlot|hovertemplate|Predicted %\{x\}|Actual %\{y\}|chartHeatmap|scattergl|95% CI|AI Forecast/);
+  assert.doesNotMatch(home + script, /These four charts are random or hand-entered drawings/);
 });
 
 test('Plotly script tags use the pinned integrity hash', function () {
@@ -106,26 +103,40 @@ test('story demo renders text, not HTML, and does not depend on a third-party CS
   assert.match(demo, /input\.value = ''/);
   assert.match(demo, /clearView\('Could not parse that CSV\.'\)/);
   assert.match(demo, /clearView\('This demo only reads CSV files up to 1 MB\.'\)/);
+  assert.match(page, /id="factcheck"/);
+  assert.match(page, /not from a language model/);
+  assert.match(demo, /exampleClaims/);
+  assert.match(demo, /resetFactCheck/);
+  assert.doesNotMatch(demo, /innerHTML/);
 });
 
-test('the starter template does not publish fabricated metrics or placeholder endpoints', function () {
-  const starter = read('generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html');
-  assert.match(starter, /unused starter template/);
-  assert.match(starter, /href="index\.html"/);
-  assert.match(starter, /retail_sentiment_demo\.html/);
-  assert.match(starter, new RegExp(cdn.PLOTLY_INTEGRITY));
-  assert.match(starter, /Illustrative band \(±8\)/);
-  assert.doesNotMatch(starter, /95% CI|yourusername|your-form-id|Avg Uplift|Stakeholder NPS|resume\.pdf|LangChain|Power BI|XGBoost|Formspree|toISOString/);
+test('the starter template is deleted and nothing links to it', function () {
+  const starter = 'generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html';
+  assert.equal(fs.existsSync(path.join(root, starter)), false);
+  const linked = livePages.concat(['README.md']).concat(
+    fs.readdirSync(path.join(root, 'js')).map(function (name) { return 'js/' + name; })
+  );
+  linked.forEach(function (file) {
+    assert.doesNotMatch(read(file), /generative_ai_data_analyst_portfolio_git_hub_pages_single_file/, file);
+  });
+});
+
+test('no shipped page still hovers a hand-entered matrix as Predicted versus Actual', function () {
+  const files = livePages.concat(
+    fs.readdirSync(path.join(root, 'js')).map(function (name) { return 'js/' + name; })
+  );
+  files.forEach(function (file) {
+    assert.doesNotMatch(read(file), /Predicted %\{x\}|Actual %\{y\}|hovertemplate/, file);
+  });
 });
 
 test('link previews do not call the drawings AI-powered storytelling', function () {
   assert.doesNotMatch(read('index.html'), /AI-powered data storytelling/);
-  assert.doesNotMatch(read('generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html'), /AI-powered data storytelling/);
-  assert.match(read('index.html'), /Homepage charts are drawings, not model evaluations/);
+  assert.match(read('index.html'), /No forecast, confidence interval, or classifier is drawn on the homepage/);
 });
 
 test('local script sources point at files in the repo', function () {
-  livePages.concat(['generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html']).forEach(function (page) {
+  livePages.forEach(function (page) {
     const html = read(page);
     const sources = html.match(/<script src="([^"]+)"/g) || [];
     sources.forEach(function (tag) {
@@ -138,8 +149,7 @@ test('local script sources point at files in the repo', function () {
 
 test('demo sources do not contain credential assignments', function () {
   const files = fs.readdirSync(path.join(root, 'js')).map(function (name) { return 'js/' + name; })
-    .concat(livePages)
-    .concat(['generative_ai_data_analyst_portfolio_git_hub_pages_single_file.html']);
+    .concat(livePages);
   const secret = /sk_live_[0-9A-Za-z]+|AKIA[0-9A-Z]{16}|api[_-]?key\s*[:=]\s*['"][^'"]+['"]/i;
   files.forEach(function (file) {
     assert.doesNotMatch(read(file), secret, file);
