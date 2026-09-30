@@ -121,3 +121,60 @@ test('slider parsing falls back when the value is empty', function () {
   assert.equal(logic.readSliderInt('', 7), 7);
   assert.equal(logic.readSliderInt('08', 0), 8);
 });
+
+test('zero-shot labels are a positional array, not an options object', function () {
+  var args = logic.zeroShotArguments(['price', 'shipping']);
+  assert.ok(Array.isArray(args[0]));
+  assert.deepEqual(args[0], ['price', 'shipping']);
+  assert.equal(args[1].hypothesis_template, 'This review is about {}.');
+  assert.equal(args[1].multi_label, true);
+  assert.equal(Object.hasOwn(args[1], 'candidate_labels'), false);
+  assert.throws(function () {
+    logic.zeroShotArguments({ candidate_labels: ['price'] });
+  }, /array of strings/);
+  assert.equal(logic.topicChartData({ labels: ['[object Object]'], scores: [0.9] }), null);
+  assert.deepEqual(
+    logic.topicChartData({ labels: ['price', 'shipping'], scores: [0.2, 0.8] }),
+    { labels: ['price', 'shipping'], scores: [0.2, 0.8] }
+  );
+});
+
+test('a failed analysis stage does not cancel the next stage', async function () {
+  var seen = [];
+  await logic.runStages([
+    {
+      task: function () { throw new Error('sentiment down'); },
+      onError: function (error) { seen.push(error.message); }
+    },
+    {
+      task: function () { seen.push('topic'); return Promise.resolve(); },
+      onError: function () { seen.push('topic-error'); }
+    }
+  ]);
+  assert.deepEqual(seen, ['sentiment down', 'topic']);
+});
+
+test('reviews past the character cap are clipped', function () {
+  assert.deepEqual(logic.clipReview('short'), { text: 'short', truncated: false });
+  var long = 'a'.repeat(logic.MAX_REVIEW_CHARS + 5);
+  var clipped = logic.clipReview(long);
+  assert.equal(clipped.truncated, true);
+  assert.equal(clipped.text.length, logic.MAX_REVIEW_CHARS);
+  assert.equal(logic.MAX_REVIEW_CHARS, 2000);
+});
+
+test('duplicate and hostile CSV headers stay data instead of being dropped', function () {
+  var rows = logic.parseCSV('bill,bill,__proto__,constructor\n10,11,1,2\n12,13,3,4\n');
+  assert.equal(rows[0].bill, '10');
+  assert.equal(rows[0]['bill (2)'], '11');
+  assert.equal(rows[1]['bill (2)'], '13');
+  assert.equal(rows[0]['__proto__'], '1');
+  assert.equal(rows[0].constructor, '2');
+  assert.equal({}.polluted, undefined);
+  assert.deepEqual(rows.warnings, ['Duplicate column "bill" was kept as "bill (2)".']);
+  assert.deepEqual(logic.numericColumns(rows), ['bill', 'bill (2)', '__proto__', 'constructor']);
+  var blank = logic.parseCSV('bill,,tickets\n1,ignored,2\n');
+  assert.deepEqual(logic.numericColumns(blank), ['bill', 'tickets']);
+  assert.match(blank.warnings.join(' '), /empty name was skipped/);
+  assert.throws(function () { logic.parseCSV('a,b\n"unterminated,1'); }, /unclosed quote/);
+});
