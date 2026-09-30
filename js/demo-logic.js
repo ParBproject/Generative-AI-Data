@@ -17,6 +17,8 @@
   var ILLUSTRATIVE_BAND_NAME = 'Illustrative band (±8)';
   var FRAUD_TOTAL = 1000;
   var MAX_CSV_BYTES = 1000000;
+  var MAX_REVIEW_CHARS = 2000;
+  var TOPIC_HYPOTHESIS = 'This review is about {}.';
 
   var SAMPLE_CSV = [
     'segment,monthly_bill,tickets',
@@ -101,6 +103,49 @@ function contribution(coefficient, value, baseline) {
     return scores.positive > scores.negative ? 'positive' : 'negative';
   }
 
+  // transformers.js 2.11.0 zero-shot _call(text, labels, options).
+  // The second argument is the label array. An options object is read as one label.
+  function zeroShotArguments(labels) {
+    if (!Array.isArray(labels) || labels.length === 0) {
+      throw new Error('topic labels must be a non-empty array of strings');
+    }
+    labels.forEach(function (label) {
+      if (typeof label !== 'string' || label.trim() === '') {
+        throw new Error('topic labels must be a non-empty array of strings');
+      }
+    });
+    return [
+      labels.slice(),
+      { hypothesis_template: TOPIC_HYPOTHESIS, multi_label: true }
+    ];
+  }
+
+  function topicChartData(output) {
+    if (!output || !Array.isArray(output.labels) || !Array.isArray(output.scores)) return null;
+    if (!output.labels.length || output.labels.length !== output.scores.length) return null;
+    for (var i = 0; i < output.labels.length; i += 1) {
+      if (typeof output.labels[i] !== 'string' || output.labels[i] === '[object Object]') return null;
+      if (typeof output.scores[i] !== 'number' || !Number.isFinite(output.scores[i])) return null;
+    }
+    return { labels: output.labels.slice(), scores: output.scores.slice() };
+  }
+
+  function clipReview(text) {
+    var value = String(text);
+    if (value.length <= MAX_REVIEW_CHARS) return { text: value, truncated: false };
+    return { text: value.slice(0, MAX_REVIEW_CHARS), truncated: true };
+  }
+
+  function runStages(stages) {
+    return stages.reduce(function (promise, stage) {
+      return promise.then(function () {
+        return Promise.resolve().then(stage.task).catch(function (error) {
+          stage.onError(error);
+        });
+      });
+    }, Promise.resolve());
+  }
+
   function parseCSV(text) {
     var input = String(text).replace(/^\uFEFF/, '');
     var rows = [];
@@ -142,6 +187,7 @@ function contribution(coefficient, value, baseline) {
       }
       cell += char;
     }
+    if (inQuotes) throw new Error('CSV has an unclosed quote');
     if (cell.length > 0 || row.length > 0) {
       row.push(cell);
       rows.push(row);
@@ -152,15 +198,43 @@ function contribution(coefficient, value, baseline) {
     });
     if (!nonEmpty.length) return [];
 
-    var header = nonEmpty[0].map(function (name) { return name.trim(); });
-    return nonEmpty.slice(1).map(function (cells) {
+    var warnings = [];
+    var usedNames = Object.create(null);
+    var skippedEmpty = false;
+    var header = nonEmpty[0].map(function (raw) {
+      var name = String(raw).trim();
+      if (!name) {
+        skippedEmpty = true;
+        return '';
+      }
+      var key = name;
+      var n = 2;
+      while (Object.prototype.hasOwnProperty.call(usedNames, key)) {
+        key = name + ' (' + n + ')';
+        n += 1;
+      }
+      if (key !== name) warnings.push('Duplicate column "' + name + '" was kept as "' + key + '".');
+      usedNames[key] = true;
+      return key;
+    });
+    if (skippedEmpty) warnings.push('A column with an empty name was skipped.');
+
+    var records = nonEmpty.slice(1).map(function (cells) {
       var record = {};
       header.forEach(function (name, index) {
-        if (!name || Object.prototype.hasOwnProperty.call(record, name)) return;
-        record[name] = cells[index] == null ? '' : cells[index];
+        if (!name) return;
+        // defineProperty stores "__proto__" as data. Assignment would throw in strict mode.
+        Object.defineProperty(record, name, {
+          value: cells[index] == null ? '' : cells[index],
+          enumerable: true,
+          writable: true,
+          configurable: true
+        });
       });
       return record;
     });
+    if (warnings.length) records.warnings = warnings;
+    return records;
   }
 
   function numericColumns(rows) {
@@ -237,6 +311,8 @@ function summarizeNumeric(values) {
     ILLUSTRATIVE_BAND_NAME: ILLUSTRATIVE_BAND_NAME,
     FRAUD_TOTAL: FRAUD_TOTAL,
     MAX_CSV_BYTES: MAX_CSV_BYTES,
+    MAX_REVIEW_CHARS: MAX_REVIEW_CHARS,
+    TOPIC_HYPOTHESIS: TOPIC_HYPOTHESIS,
     SAMPLE_CSV: SAMPLE_CSV,
     churnProbability: churnProbability,
     churnPercent: churnPercent,
@@ -248,6 +324,10 @@ function summarizeNumeric(values) {
     fraudCounts: fraudCounts,
     mapSentimentScores: mapSentimentScores,
     sentimentVerdict: sentimentVerdict,
+    zeroShotArguments: zeroShotArguments,
+    topicChartData: topicChartData,
+    clipReview: clipReview,
+    runStages: runStages,
     parseCSV: parseCSV,
     numericColumns: numericColumns,
     summarizeNumeric: summarizeNumeric,

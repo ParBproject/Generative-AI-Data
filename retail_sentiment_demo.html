@@ -21,7 +21,7 @@
   <main>
     <p><a href="index.html">Back to portfolio</a></p>
     <h1>Retail review sentiment</h1>
-    <p>Sentiment uses DistilBERT SST-2, topics use a small DeBERTa zero-shot model, and the summary uses DistilBART. They download in the browser on the first analysis. The summary is not a chat model.</p>
+    <p>Sentiment uses DistilBERT SST-2, topics use a small DeBERTa zero-shot model, and the summary uses DistilBART. They download in the browser on the first analysis. Topic scores are separate relevance scores, so more than one theme can be high. The summary is not a chat model. Reviews longer than 2,000 characters are cut before analysis.</p>
     <label for="review">Product review</label>
     <textarea id="review" placeholder="This product is amazing!"></textarea><br>
     <button id="analyze" type="button">Analyze</button>

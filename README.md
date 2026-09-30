@@ -75,7 +75,7 @@ python3 -m http.server
 node --test
 ~~~
 
-GitHub Actions runs the same command on push and pull request. The check downloads the pinned Plotly and Transformers files and compares them with the integrity hashes in `js/cdn.js`.
+GitHub Actions checks out the repo with pinned actions, installs Node 22.14.0, runs `npm ci` from `package-lock.json`, and then `npm test` (the same `node --test` command). The check downloads the pinned Plotly and Transformers files and compares them with the integrity hashes in `js/cdn.js`.
 
 ## Data Note
 
