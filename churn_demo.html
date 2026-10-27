@@ -20,8 +20,8 @@
   <main>
     <p><a href="index.html">Back to portfolio</a></p>
     <h1>Churn what-if</h1>
-    <p id="formula">Illustrative logistic, not fit on customer data. Bars are coefficient × (value − baseline), not SHAP.</p>
-    <p>Move the sliders to compare one made-up customer with the baseline.</p>
+    <p id="formula">Fixed coefficients, not fit on customer data. The script fills in the formula. Bars are coefficient × (value − baseline), in log-odds.</p>
+    <p>Move the sliders. The baseline starts at 12 months and $70. "Set as baseline" uses the current slider values instead.</p>
     <label for="tenure">Tenure (months): <span id="lblTenure">12</span></label>
     <input type="range" id="tenure" min="1" max="72" value="12">
     <label for="charges">Monthly charges ($): <span id="lblCharges">70</span></label>

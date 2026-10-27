@@ -1,71 +1,40 @@
 (function () {
-  var kpiData = [
-    { label: 'Demos in this repo', value: '4' },
-    { label: 'Production models', value: '0' },
-    { label: 'Sentiment stack', value: 'In-browser' },
-    { label: 'Data', value: 'Synthetic' }
-  ];
-
   var projects = [
     {
-      title: 'AI-Driven Review Sentiment (Retail)',
-      blurb: 'DistilBERT sentiment, zero-shot topics, and a short summary. Runs in the browser.',
-      tags: ['Transformers', 'Plotly'],
+      title: 'Retail review sentiment',
+      blurb: 'DistilBERT sentiment, zero-shot topic scores, and a DistilBART summary. The models load in the browser when you analyze a review.',
+      tags: ['DistilBERT', 'Plotly'],
       repo: 'https://github.com/ParBproject/Generative-AI-Data',
       live: 'retail_sentiment_demo.html'
     },
     {
-      title: 'Synthetic Data for Fraud Detection',
-      blurb: 'A slider that redraws a synthetic fraud cloud. Not a trained detector.',
-      tags: ['Synthetic', 'Plotly'],
+      title: 'Fraud scatter',
+      blurb: '1,000 random points. The slider sets how many are drawn in the upper-right corner and labeled fraud.',
+      tags: ['Plotly'],
       repo: 'https://github.com/ParBproject/Generative-AI-Data',
       live: 'fraud_demo.html'
     },
     {
-      title: 'Automated Data Storytelling',
-      blurb: 'Minimum, mean, and maximum beside a histogram. Example claims are checked against those stats. Not a language model.',
+      title: 'Column summary',
+      blurb: 'Mean, minimum, and maximum of a numeric column, drawn as a histogram. The sample file is five made-up rows.',
       tags: ['CSV', 'Plotly'],
       repo: 'https://github.com/ParBproject/Generative-AI-Data',
       live: 'automated_data_storytelling_demo.html'
     },
     {
-      title: 'Churn Prediction Dashboard',
-      blurb: 'Two sliders and a hand-set logistic. Useful for explaining a coefficient, not a churn model.',
-      tags: ['What-if', 'Plotly'],
+      title: 'Churn what-if',
+      blurb: 'A logistic with fixed coefficients. The sliders change tenure and monthly charges and show the new probability.',
+      tags: ['Plotly'],
       repo: 'https://github.com/ParBproject/Generative-AI-Data',
       live: 'churn_demo.html'
     }
   ];
-
-  function addText(parent, className, text) {
-    var el = document.createElement('div');
-    if (className) el.className = className;
-    el.textContent = text;
-    parent.appendChild(el);
-    return el;
-  }
-
-  var kpisEl = document.getElementById('kpis');
-  if (kpisEl) {
-    kpiData.forEach(function (item) {
-      var card = document.createElement('div');
-      card.className = 'kpi';
-      addText(card, 'label', item.label);
-      addText(card, 'value', item.value);
-      kpisEl.appendChild(card);
-    });
-  }
 
   var grid = document.getElementById('projectsGrid');
   if (grid) {
     projects.forEach(function (project) {
       var card = document.createElement('article');
       card.className = 'card';
-      var thumb = document.createElement('div');
-      thumb.className = 'thumb';
-      thumb.setAttribute('role', 'img');
-      thumb.setAttribute('aria-label', project.title);
-      card.appendChild(thumb);
 
       var content = document.createElement('div');
       content.className = 'card-content';

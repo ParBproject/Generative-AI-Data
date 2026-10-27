@@ -3,16 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Generative AI Data Analyst – Portfolio</title>
-  <meta name="description" content="Four browser demos: in-browser DistilBERT sentiment, a two-feature churn sketch, column min/mean/max with example-claim checks, and a synthetic fraud cloud." />
-  <meta name="author" content="ParBproject" />
-  <meta property="og:title" content="Generative AI Data Analyst – Portfolio" />
-  <meta property="og:description" content="Four labeled browser demos on synthetic data. No forecast, confidence interval, or classifier is drawn on the homepage." />
+  <title>Data demos — Par Bahrae</title>
+  <meta name="description" content="Four browser demos: DistilBERT review sentiment, a fixed-coefficient churn logistic, a column min/mean/max with a histogram, and a scatter of random points." />
+  <meta name="author" content="Par Bahrae" />
+  <meta property="og:title" content="Data demos — Par Bahrae" />
+  <meta property="og:description" content="DistilBERT review sentiment, a fixed-coefficient churn logistic, a column summary, and a scatter of random points." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://dummyimage.com/1200x630/0b1020/e0e7ff&text=AI+Data+Analyst+Portfolio" />
   <meta name="theme-color" content="#0b1020" />
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -110,26 +107,22 @@
     .card {
       background: linear-gradient(180deg, var(--panel), var(--panel-2));
       border: 1px solid rgba(255,255,255,.08); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
-      display:flex; flex-direction:column; min-height: 260px;
+      display:flex; flex-direction:column;
     }
-    .thumb { height:140px; background: radial-gradient(300px 220px at 20% -10%, rgba(124,92,255,.35), transparent 60%), radial-gradient(300px 220px at 120% 120%, rgba(54,225,220,.25), transparent 60%), #0d1330; border-bottom: 1px solid rgba(255,255,255,.06); }
     .card-content { padding: 14px; display:flex; flex:1; flex-direction:column; }
     .tags { display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 12px; }
     .tag { font-size: 12px; padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.12); color: var(--muted); }
     .card a { align-self:flex-start; margin-top: auto; }
 
-    .kpis { display:grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 10px; }
-    .kpi { padding: 12px; border-radius: 12px; background: #0e1430; border: 1px solid rgba(255,255,255,.06); }
-    .kpi .label { color: var(--muted); font-size: 12px; }
-    .kpi .value { font-family: 'Montserrat', sans-serif; font-size: 20px; margin-top: 6px; }
+    .hero-card h2 { font-family: 'Montserrat', sans-serif; font-size: 16px; margin: 0 0 8px; }
+    .hero-card ul { margin: 0; padding-left: 18px; color: var(--muted); }
+    .hero-card li { margin: 6px 0; }
 
     /* Footer */
     footer { margin: 34px 0 60px; text-align:center; color: var(--muted); }
 
-    /* Responsive tweaks */
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; }
-      .kpis { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
     }
   </style>
 </head>
@@ -138,8 +131,8 @@
   <header class="nav" aria-label="Top Navigation">
     <div class="nav-inner">
       <div class="brand">
-        <div class="logo" aria-hidden="true">AI</div>
-        <span>Generative AI Data Analyst</span>
+        <div class="logo" aria-hidden="true">PB</div>
+        <span>Par Bahrae</span>
       </div>
       <nav>
         <a class="link" href="#projects">Projects</a>
@@ -150,56 +143,55 @@
   </header>
 
   <main id="main">
-    <!-- Hero -->
     <section class="hero" id="home">
       <div>
-        <h1 class="title">Turning data into interactive stories — with Generative AI</h1>
-        <p class="subtitle">Four browser demos for an AI data analyst portfolio: review text, a churn what-if, a narrative next to a chart, and a synthetic fraud sketch. The numbers on this page are labeled as demos.</p>
+        <h1 class="title">Four browser demos: text, a logistic, and two charts</h1>
+        <p class="subtitle">Sentiment runs DistilBERT on a review you type. The churn page evaluates a logistic whose coefficients are written in the source. The other two pages plot made-up numbers.</p>
         <div class="cta">
-          <a class="btn primary" href="#projects">View Projects</a>
+          <a class="btn primary" href="#projects">View projects</a>
           <a class="btn" href="https://github.com/ParBproject/Generative-AI-Data" target="_blank" rel="noopener">GitHub ↗</a>
         </div>
       </div>
-      <div class="hero-card" aria-label="At-a-glance metrics">
-        <div class="kpis" id="kpis"></div>
-        <div class="muted" style="margin-top:10px">Labels for this page only. Not performance metrics.</div>
+      <div class="hero-card">
+        <h2>On this site</h2>
+        <ul>
+          <li>Review sentiment, topic scores, and a short summary</li>
+          <li>Churn probability from a fixed logistic</li>
+          <li>Min, mean, and max of a numeric column, next to a histogram</li>
+          <li>A scatter of random points, with a slider for the fraud share</li>
+        </ul>
       </div>
     </section>
 
-    <!-- Skills -->
     <section aria-labelledby="skills-title">
-      <h2 class="section-title" id="skills-title">Skills & Tools</h2>
-      <p class="muted">Plotly • Browser Transformers (sentiment demo) • Static HTML • GitHub Pages</p>
+      <h2 class="section-title" id="skills-title">What's in the pages</h2>
       <div class="skills" role="list">
         <div class="chip" role="listitem"><span class="dot"></span> Plotly</div>
-        <div class="chip" role="listitem"><span class="dot"></span> In-browser sentiment model</div>
-        <div class="chip" role="listitem"><span class="dot"></span> Narrative next to a chart</div>
-        <div class="chip" role="listitem"><span class="dot"></span> Honest demo labels</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Transformers.js</div>
+        <div class="chip" role="listitem"><span class="dot"></span> DistilBERT SST-2</div>
+        <div class="chip" role="listitem"><span class="dot"></span> Static HTML</div>
       </div>
     </section>
 
-    <!-- Projects -->
     <section id="projects" aria-labelledby="projects-title">
       <h2 class="section-title" id="projects-title">Projects</h2>
-      <div class="muted">Four demos in this repository.</div>
+      <p class="muted">Each card opens a page in this repository.</p>
       <div class="projects-grid" id="projectsGrid"></div>
     </section>
 
-    <!-- About -->
     <section id="about" aria-labelledby="about-title">
-      <h2 class="section-title" id="about-title">About Me</h2>
-      <p class="muted">These pages are interview demos, not production models. The sentiment page loads DistilBERT in the browser. The churn page is a two-feature logistic sketch. The storytelling page prints a column's minimum, mean, and maximum, then checks example claims against those stats. The fraud page draws a synthetic cloud. Sibling repos — Bayline fulfillment and the stroke casebook — are where the analyst work lives.</p>
+      <h2 class="section-title" id="about-title">About</h2>
+      <p class="muted">I'm Par Bahrae. These four pages are small demos I can open in a browser: a sentiment model on text you type, a logistic with the coefficients in <code>js/demo-logic.js</code>, a column summary, and a scatter of random points. Other analysis work is on <a href="https://parbproject.github.io/">parbproject.github.io</a>.</p>
     </section>
 
-    <!-- Contact -->
     <section id="contact" aria-labelledby="contact-title">
       <h2 class="section-title" id="contact-title">Contact</h2>
-      <p class="muted">The code for these demos is in <a href="https://github.com/ParBproject/Generative-AI-Data" target="_blank" rel="noopener">this repository</a>.</p>
+      <p class="muted"><a href="mailto:githubproproject@proton.me">githubproproject@proton.me</a> · <a href="https://www.linkedin.com/in/parbahrae/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/ParBproject/Generative-AI-Data" target="_blank" rel="noopener">GitHub</a></p>
     </section>
   </main>
 
   <footer>
-    <div>© <span id="year"></span> • ParBproject</div>
+    <div>© <span id="year"></span> Par Bahrae</div>
   </footer>
 
   <script src="js/portfolio-home.js"></script>

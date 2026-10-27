@@ -13,9 +13,15 @@ test('README matches the live pages and the local test command', function () {
   assert.match(readme, /churn_demo\.html/);
   assert.match(readme, /automated_data_storytelling_demo\.html/);
   assert.match(readme, /node --test/);
-  assert.match(readme, /Do not claim LangChain, Power BI, Tableau/);
-  assert.match(readme, /synthetic cloud/);
-  assert.match(readme, /hand-set two-coefficient logistic/);
+  assert.match(readme, /DistilBERT/);
+  assert.match(readme, /Math\.random\(\)/);
+  assert.match(readme, /sigmoid\(-4 - 0\.05/);
+  assert.match(readme, /0\.04 × monthly charges/);
+  assert.match(readme, /not a fit on customer data/);
+  assert.match(readme, /five rows/);
+  assert.doesNotMatch(readme, /LangChain|Power BI|Tableau|\bdbt\b/);
+  assert.doesNotMatch(readme, /Say that out loud|stroke casebook|Bayline/);
+  assert.doesNotMatch(readme, /AUC|F1-Score|95% CI|2\.4M/);
   assert.doesNotMatch(readme, /How does fraud prevalence change transaction patterns/);
 });
 

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Synthetic fraud scatter</title>
+  <title>Fraud scatter</title>
   <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" integrity="sha384-Hl48Kq2HifOWdXEjMsKo6qxqvRLTYqIGbvlENBmkHAxZKIGCXv43H6W1jA671RzC" crossorigin="anonymous"></script>
   <style>
     html { color-scheme: light; }
@@ -18,9 +18,8 @@
 <body>
   <main>
     <p><a href="index.html">Back to portfolio</a></p>
-    <h1>Synthetic fraud scatter</h1>
-    <img src="images/fraud_detection.svg" alt="Illustration of a warning mark beside a chart" style="max-width:100%;height:auto;">
-    <p id="disclaimer">These points are synthetic. Fraud points are placed in the 70–100 box on both axes by the generator. This page is not a fraud detector and it does not use real transactions.</p>
+    <h1>Fraud scatter</h1>
+    <p id="disclaimer">Each point is a uniform random draw. The slider sets how many of the 1,000 points are placed in the 70–100 box on both axes and labeled fraud. This page is not a fraud detector, and it has no transaction data.</p>
     <label for="rate">Fraud share: <span id="lblRate">5</span>%</label>
     <input type="range" id="rate" min="1" max="20" value="5">
     <p id="counts" aria-live="polite"></p>

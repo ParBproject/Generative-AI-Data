@@ -31,10 +31,11 @@ test('churn probability matches the hand-set logistic', function () {
   assert.equal(logic.churnPercent(probability), probability * 100);
 });
 
-test('formula text discloses that the bars are not SHAP', function () {
+test('formula text names the fixed coefficients and the bar definition', function () {
   var text = logic.churnFormulaText();
   assert.match(text, /not fit on customer data/);
-  assert.match(text, /not SHAP/);
+  assert.match(text, /log-odds/);
+  assert.doesNotMatch(text, /SHAP/);
   assert.match(text, /-4/);
   assert.match(text, /-0\.05/);
   assert.match(text, /0\.04/);
