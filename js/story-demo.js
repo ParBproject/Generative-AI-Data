@@ -5,7 +5,7 @@
   var chart = document.getElementById('chart');
   var select = document.getElementById('columnSelect');
   var factcheckList = document.getElementById('factcheckList');
-  var factcheckPlaceholder = 'Load a numeric column. Each example is then checked against that column\'s minimum, mean, maximum, and row count.';
+  var factcheckPlaceholder = 'Load a numeric column to check the example sentences against its minimum, mean, maximum, and row count.';
 
   function warningSuffix() {
     var warnings = dataset && dataset.warnings;
@@ -29,7 +29,7 @@
       var sentence = document.createElement('p');
       sentence.textContent = claim.sentence;
       var falsifier = document.createElement('div');
-      falsifier.textContent = 'Column stat that falsifies it: ' + claim.falsifier;
+      falsifier.textContent = 'Checked against: ' + claim.falsifier;
       article.append(type, sentence, falsifier);
       factcheckList.appendChild(article);
     });

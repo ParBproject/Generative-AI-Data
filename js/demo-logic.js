@@ -63,9 +63,9 @@ function contribution(coefficient, value, baseline) {
 
   function churnFormulaText(coefficients) {
     var coef = coefficients || COEFFICIENTS;
-    return 'Illustrative logistic, not fit on customer data: probability = sigmoid(' +
+    return 'Fixed coefficients, not fit on customer data: probability = sigmoid(' +
       coef.intercept + ' + (' + coef.tenure + ' × tenure) + (' + coef.charges +
-      ' × monthly charges)). Bars are coefficient × (value − baseline), not SHAP.';
+      ' × monthly charges)). Bars are coefficient × (value − baseline), in log-odds.';
   }
 
   function fraudCounts(total, fraudPercent) {

@@ -1,40 +1,38 @@
-# Generative AI Data Portfolio
+# Generative AI data demos
 
-## For an AI data analyst application
+Four browser pages by [Par Bahrae](https://github.com/ParBproject). The live copy is at <https://parbproject.github.io/Generative-AI-Data/>.
 
-**Show this after the stroke casebook, not instead of it.** The sentiment page runs DistilBERT in the browser. The churn page is a two-feature logistic sketch. The story page writes minimum, mean, and maximum next to a histogram, then checks example claims against those stats. The fraud page draws a synthetic cloud. Say that out loud. Do not claim LangChain, Power BI, Tableau, dbt, or a production uplift.
+## Pages
 
-<p align="center"><img src="docs/screenshots/portfolio_home.png" alt="Generative AI demo index with honest labels" width="100%"></p>
-<p align="center"><img src="docs/screenshots/sentiment_demo.png" alt="Retail sentiment demo" width="100%"></p>
-<p align="center"><img src="docs/screenshots/churn_demo.png" alt="Churn what-if demo" width="100%"></p>
-<p align="center"><img src="docs/screenshots/story_demo.png" alt="Data storytelling demo" width="100%"></p>
+| Page | What it does |
+| --- | --- |
+| [Retail review sentiment](https://parbproject.github.io/Generative-AI-Data/retail_sentiment_demo.html) | DistilBERT SST-2 for sentiment, a small DeBERTa zero-shot model for six topic labels, and a DistilBART summary. The libraries download in the browser on the first analysis. |
+| [Fraud scatter](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) | 1,000 uniform random points. A slider chooses how many are drawn in the 70–100 box on both axes and labeled fraud. |
+| [Churn what-if](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) | Probability from a fixed logistic: sigmoid(-4 - 0.05 × tenure + 0.04 × monthly charges). Sliders move the inputs. Those coefficients are constants in `js/demo-logic.js`, not a fit on customer data. |
+| [Column summary](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) | Mean, minimum, and maximum of one numeric CSV column, with a histogram. The bundled sample is five rows (`SAMPLE_CSV`). A short list of example sentences is checked against those stats. |
 
-[![HTML](https://img.shields.io/badge/HTML5-Interactive_Demos-E34F26?logo=html5&logoColor=white)](https://parbproject.github.io/Generative-AI-Data/)
-[![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-222?logo=github)](https://parbproject.github.io/Generative-AI-Data/)
+## Run locally
 
-Four browser demos. The data is synthetic or illustrative. Sentiment runs DistilBERT in the browser. Churn is a two-feature logistic sketch. Storytelling prints a column's minimum, mean, and maximum beside a histogram, then checks example claims against those stats. Fraud draws a synthetic cloud.
+Open `index.html` in a browser. The sentiment page fetches its library and models, so serve the folder if a `file://` URL blocks that request:
 
-## Portfolio
+```bash
+python3 -m http.server
+```
 
-| Project | Business question | Demonstration |
-|---|---|---|
-| Retail sentiment | What are customers saying, and which themes matter most? | [Open demo](https://parbproject.github.io/Generative-AI-Data/retail_sentiment_demo.html) |
-| Fraud exploration | What does a synthetic cloud look like as the fraud share changes? | [Open demo](https://parbproject.github.io/Generative-AI-Data/fraud_demo.html) |
-| Churn analysis | How does a hand-set logistic respond when tenure or charges change? | [Open demo](https://parbproject.github.io/Generative-AI-Data/churn_demo.html) |
-| Automated storytelling | What do the column minimum, mean, and maximum actually support? | [Open demo](https://parbproject.github.io/Generative-AI-Data/automated_data_storytelling_demo.html) |
+## Tests
 
-## Skills Demonstrated
+Node 22.14.0.
 
-- Four demos on synthetic or illustrative data
-- In-browser DistilBERT sentiment
-- Storytelling as column minimum, mean, and maximum, with example claims checked against those stats
-- Churn as a two-feature logistic sketch
-- Fraud as a synthetic point cloud
-- Static HTML on GitHub Pages
+```bash
+npm ci
+npm test
+```
 
-## Repository Structure
+`npm test` runs `node --test`. GitHub Actions checks out the repo with pinned actions, installs that Node version, runs `npm ci` from `package-lock.json`, then `npm test`. One test downloads the pinned Plotly and Transformers files and compares them with the hashes in `js/cdn.js`.
 
-~~~text
+## Layout
+
+```text
 .
 ├── index.html
 ├── retail_sentiment_demo.html
@@ -42,31 +40,9 @@ Four browser demos. The data is synthetic or illustrative. Sentiment runs Distil
 ├── churn_demo.html
 ├── automated_data_storytelling_demo.html
 ├── js/
-├── test/
-├── docs/screenshots/
-└── images/
-~~~
+└── test/
+```
 
-`index.html` is the live homepage. It links to the four demos and does not draw a forecast, a confidence interval, or a classifier.
+## Data
 
-## Run Locally
-
-Clone the repository and open `index.html` in a browser. No build process or package installation is required to view the pages.
-
-The sentiment demo fetches its library and models on the first analysis. Serve the folder over HTTP if the browser blocks that fetch from a local file:
-
-~~~bash
-python3 -m http.server
-~~~
-
-## Tests
-
-~~~bash
-node --test
-~~~
-
-GitHub Actions checks out the repo with pinned actions, installs Node 22.14.0, runs `npm ci` from `package-lock.json`, and then `npm test` (the same `node --test` command). The check downloads the pinned Plotly and Transformers files and compares them with the integrity hashes in `js/cdn.js`.
-
-## Data Note
-
-The examples are portfolio demonstrations and use synthetic or illustrative data. The homepage does not draw a forecast, a confidence interval, or a classifier. The churn page uses a hand-set two-coefficient logistic. That figure is not a measured model result.
+Sentiment scores the text in the box. The fraud points are `Math.random()` draws (`FRAUD_TOTAL` is 1,000). The churn probability is the formula above. The storytelling sample is the five-row string in `js/demo-logic.js`.
