@@ -10,14 +10,3 @@ Thumbs.db
 *.swp
 ~$*
 node_modules/
-
-# Agent tooling and notes
-.cursor/
-.cursorrules
-AGENTS.md
-AGENT.md
-CLAUDE.md
-.claude/
-prompts/
-plans/
-*.plan.md
